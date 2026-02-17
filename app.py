@@ -1,6 +1,7 @@
 import streamlit as st
 from dotenv import load_dotenv
 
+from rag.parser import parse_file
 from rag.chunker import chunk_text
 from rag.embedder import embed_texts, embed_query
 from rag.store import add_chunks, query, clear
@@ -15,20 +16,30 @@ st.caption("Upload a document. Ask questions. Get answers with citations.")
 # --- Sidebar: Upload ---
 with st.sidebar:
     st.header("Upload Document")
-    uploaded_file = st.file_uploader("Choose a .txt file", type=["txt"])
+    uploaded_file = st.file_uploader("Upload a document", type=["txt", "pdf", "csv"])
 
     if uploaded_file is not None:
         if st.button("Process Document"):
             with st.spinner("Processing..."):
-                # Read file
-                text = uploaded_file.read().decode("utf-8")
-                filename = uploaded_file.name
+                # Parse file (routes to correct parser)
+                result = parse_file(uploaded_file)
+                filename = result.filename
+
+                # Warn if PDF has very little text (likely scanned)
+                if result.file_type == "pdf" and len(result.text.strip()) < 100:
+                    st.warning("This PDF contains very little extractable text. "
+                               "It may be a scanned/image-based PDF.")
 
                 # Clear previous data
                 clear()
 
-                # Chunk
-                chunks = chunk_text(text, filename)
+                # Chunk (CSV provides pre-built chunks)
+                if result.file_type == "csv":
+                    chunks = result.chunks
+                else:
+                    chunks = chunk_text(result.text, result.filename,
+                                        file_type=result.file_type,
+                                        page_map=result.page_map)
 
                 # Embed
                 chunk_texts = [c["text"] for c in chunks]
@@ -40,6 +51,7 @@ with st.sidebar:
                 st.session_state["doc_loaded"] = True
                 st.session_state["filename"] = filename
                 st.session_state["num_chunks"] = len(chunks)
+                st.session_state["file_type"] = result.file_type
 
             st.success(f"Loaded **{filename}** ({len(chunks)} chunks)")
 
@@ -51,7 +63,7 @@ with st.sidebar:
 
 # --- Main: Q&A ---
 if not st.session_state.get("doc_loaded"):
-    st.info("Upload a .txt file in the sidebar to get started.")
+    st.info("Upload a document (.txt, .pdf, or .csv) in the sidebar to get started.")
 else:
     question = st.text_input("Ask a question about your document:")
 
@@ -78,9 +90,27 @@ else:
                     results["distances"][0],
                 )
             ):
-                st.markdown(
-                    f"**Chunk {meta['chunk_index']}** "
-                    f"(distance: {dist:.4f})"
-                )
+                file_type = meta.get("file_type", "txt")
+
+                if file_type == "pdf":
+                    page_start = meta.get("page_start")
+                    page_end = meta.get("page_end")
+                    if page_start and page_end and page_start != page_end:
+                        location = f"Pages {page_start}-{page_end}"
+                    elif page_start:
+                        location = f"Page {page_start}"
+                    else:
+                        location = ""
+                    label = f"**Chunk {meta['chunk_index']}** — {location} (distance: {dist:.4f})"
+
+                elif file_type == "csv":
+                    row_start = meta.get("row_start")
+                    row_end = meta.get("row_end")
+                    label = f"**Chunk {meta['chunk_index']}** — Rows {row_start}-{row_end} (distance: {dist:.4f})"
+
+                else:
+                    label = f"**Chunk {meta['chunk_index']}** (distance: {dist:.4f})"
+
+                st.markdown(label)
                 st.text(doc[:300] + ("..." if len(doc) > 300 else ""))
                 st.divider()

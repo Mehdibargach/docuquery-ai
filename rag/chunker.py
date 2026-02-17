@@ -5,11 +5,10 @@ CHUNK_SIZE = 500  # tokens
 CHUNK_OVERLAP = 100  # tokens
 
 
-def chunk_text(text: str, filename: str) -> list[dict]:
+def chunk_text(text: str, filename: str, file_type: str = "txt", page_map: list | None = None) -> list[dict]:
     """Split text into ~500-token chunks with 100-token overlap.
 
-    Returns a list of dicts:
-        {"text": str, "source": str, "chunk_index": int, "char_start": int, "char_end": int}
+    Returns a list of dicts with metadata including file_type and page info.
     """
     tokens = ENCODING.encode(text)
     chunks = []
@@ -24,12 +23,20 @@ def chunk_text(text: str, filename: str) -> list[dict]:
         char_start = len(ENCODING.decode(tokens[:start]))
         char_end = len(ENCODING.decode(tokens[:end]))
 
+        # Find page range for PDF
+        page_start, page_end = _find_pages(char_start, char_end, page_map)
+
         chunks.append({
             "text": chunk_text_decoded,
             "source": filename,
             "chunk_index": len(chunks),
             "char_start": char_start,
             "char_end": char_end,
+            "file_type": file_type,
+            "page_start": page_start,
+            "page_end": page_end,
+            "row_start": None,
+            "row_end": None,
         })
 
         if end >= len(tokens):
@@ -37,3 +44,21 @@ def chunk_text(text: str, filename: str) -> list[dict]:
         start = end - CHUNK_OVERLAP
 
     return chunks
+
+
+def _find_pages(char_start: int, char_end: int, page_map: list | None) -> tuple[int | None, int | None]:
+    """Find the first and last page that intersect [char_start, char_end]."""
+    if page_map is None:
+        return None, None
+
+    first_page = None
+    last_page = None
+
+    for page_num, p_start, p_end in page_map:
+        # Check if this page intersects with the chunk range
+        if p_end > char_start and p_start < char_end:
+            if first_page is None:
+                first_page = page_num
+            last_page = page_num
+
+    return first_page, last_page

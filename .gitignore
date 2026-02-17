@@ -42,6 +42,7 @@ Thumbs.db
 # Project specific
 uploads/
 *.pdf
+!tests/*.pdf
 *.docx
 vector_store/
 chroma_db/

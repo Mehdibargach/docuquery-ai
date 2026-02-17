@@ -31,12 +31,8 @@ def query(query_embedding: list[float], n_results: int = TOP_K) -> dict:
 
     return {
         "documents": [[_chunks[i]["text"] for i in top_indices]],
-        "metadatas": [[{
-            "source": _chunks[i]["source"],
-            "chunk_index": _chunks[i]["chunk_index"],
-            "char_start": _chunks[i]["char_start"],
-            "char_end": _chunks[i]["char_end"],
-        } for i in top_indices]],
+        "metadatas": [[{k: v for k, v in _chunks[i].items() if k != "text"}
+                       for i in top_indices]],
         "distances": [[float(1 - similarities[i]) for i in top_indices]],
     }
 

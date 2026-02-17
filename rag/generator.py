@@ -16,9 +16,41 @@ SYSTEM_PROMPT = """You are a document Q&A assistant. Answer the user's question 
 
 Rules:
 1. Only use information from the provided context. If the answer is not in the context, say "I don't have enough information in the document to answer this question."
-2. For every claim in your answer, add a citation in the format [Source: {filename}, Chunk {chunk_index}].
+2. For every claim in your answer, add a citation:
+   - PDF files: [Source: {filename}, Page {page}]
+   - CSV files: [Source: {filename}, Rows {start}-{end}]
+   - Text files: [Source: {filename}, Chunk {chunk_index}]
 3. Be precise and concise. Quote relevant passages when helpful.
 4. Never invent or hallucinate information not present in the context."""
+
+
+def _format_chunk_header(meta: dict) -> str:
+    """Format the chunk header based on file type."""
+    file_type = meta.get("file_type", "txt")
+    source = meta["source"]
+    chunk_idx = meta["chunk_index"]
+
+    if file_type == "pdf":
+        page_start = meta.get("page_start")
+        page_end = meta.get("page_end")
+        if page_start and page_end and page_start != page_end:
+            page_info = f"Pages {page_start}-{page_end}"
+        elif page_start:
+            page_info = f"Page {page_start}"
+        else:
+            page_info = "Page unknown"
+        return f"--- Chunk {chunk_idx} from {source} ({page_info}) ---"
+
+    elif file_type == "csv":
+        row_start = meta.get("row_start")
+        row_end = meta.get("row_end")
+        if row_start and row_end:
+            return f"--- Chunk {chunk_idx} from {source} (Rows {row_start}-{row_end}) ---"
+        return f"--- Chunk {chunk_idx} from {source} ---"
+
+    else:
+        return (f"--- Chunk {chunk_idx} from {source} "
+                f"(chars {meta['char_start']}-{meta['char_end']}) ---")
 
 
 def generate_answer(question: str, search_results: dict) -> str:
@@ -28,11 +60,9 @@ def generate_answer(question: str, search_results: dict) -> str:
 
     # Build context from retrieved chunks
     context_parts = []
-    for i, (doc, meta) in enumerate(zip(documents, metadatas)):
-        context_parts.append(
-            f"--- Chunk {meta['chunk_index']} from {meta['source']} "
-            f"(chars {meta['char_start']}-{meta['char_end']}) ---\n{doc}"
-        )
+    for doc, meta in zip(documents, metadatas):
+        header = _format_chunk_header(meta)
+        context_parts.append(f"{header}\n{doc}")
     context = "\n\n".join(context_parts)
 
     client = _get_client()

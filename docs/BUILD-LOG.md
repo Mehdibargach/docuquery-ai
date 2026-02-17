@@ -70,6 +70,38 @@ Ran micro-test on 10-page document (25,159 chars, 14 chunks): Q4 tested → corr
 
 ---
 
+### 2026-02-17 — BUILD: Scope 1 (PDF + CSV Parsing)
+
+**What happened:**
+Added PDF and CSV support to DocuQuery AI as two vertical slices. The pipeline now handles three file formats end-to-end: TXT (existing), PDF (new), and CSV (new).
+
+Created `rag/parser.py` — a routing module that detects file type by extension and delegates to the correct parser:
+- `_parse_txt()`: reads UTF-8 with latin-1 fallback (same behavior as Walking Skeleton, extracted from app.py)
+- `_parse_pdf()`: uses pdfplumber to extract text page-by-page, builds a `page_map` that maps each page to character positions in the full text
+- `_parse_csv()`: converts each row to prose format (`"Row 1: col1=val1, col2=val2"`), groups rows into chunks under 400 tokens, prepends headers to each chunk for context
+
+Modified 4 existing files:
+- `chunker.py`: added `page_map` parameter and `_find_pages()` helper that maps chunk character ranges to PDF page numbers
+- `store.py`: replaced 4 hardcoded metadata keys with dynamic passthrough (`{k: v for k, v in chunk.items() if k != "text"}`) — store is now format-agnostic
+- `generator.py`: updated system prompt for multi-format citations (PDF→Page, CSV→Rows, TXT→Chunk), added `_format_chunk_header()` for context-aware headers
+- `app.py`: extended file uploader to accept PDF/CSV, routes through parser, enriched debug panel with page/row info, added scanned PDF warning
+
+**Decisions made:**
+- pdfplumber over PyPDF2/pymupdf/pdfminer — pure Python, MIT license, clean page-by-page API, accepts BytesIO (Streamlit-compatible)
+- CSV rows converted to prose (not raw CSV) — embedding models understand natural language better than comma-separated values
+- CSV chunk limit = 400 tokens (not 500) — leaves room for the header line prepended to each chunk
+- Store passthrough is dynamic — any new metadata field added by future parsers will flow through without touching store.py
+- Scanned PDF warning at <100 chars — graceful degradation, not a crash
+
+**Problems encountered:**
+- None critical. pdfplumber installed cleanly, accepted BytesIO as expected. CSV parser handles quoted fields with commas correctly.
+
+**Time spent:** ~1h
+
+**Next step:** Micro-test PDF (3 questions) + CSV (2 questions) + TXT regression, then documentation
+
+---
+
 ## Running Notes
 
 - Started BUILD before FRAME — caught the mistake, went back. This is exactly what the method is designed to prevent.

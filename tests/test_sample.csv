@@ -1,0 +1,26 @@
+Feature,Quarter,Status,Users,Satisfaction Score,Revenue Impact,Priority
+Smart Search,Q1 2025,shipped,12500,4.2,85000,high
+Auto-Tagging,Q1 2025,shipped,8300,3.8,42000,medium
+Dashboard V2,Q2 2025,shipped,15000,4.5,120000,high
+Email Digest,Q2 2025,shipped,6200,3.5,28000,low
+Bulk Export,Q2 2025,shipped,4100,4.0,35000,medium
+API V3,Q3 2025,shipped,9800,4.1,95000,high
+Mobile App,Q3 2025,shipped,18500,4.7,210000,high
+Dark Mode,Q3 2025,shipped,22000,3.9,15000,low
+Collaboration,Q4 2025,in_progress,0,0.0,0,high
+AI Assistant,Q4 2025,in_progress,0,0.0,0,high
+Webhook System,Q1 2025,shipped,3200,4.3,55000,medium
+Custom Reports,Q2 2025,shipped,7600,4.4,78000,high
+SSO Integration,Q3 2025,shipped,11000,4.6,130000,high
+Audit Log,Q3 2025,shipped,5500,3.7,32000,medium
+Role Management,Q1 2025,shipped,9100,4.0,67000,high
+Data Import,Q2 2025,shipped,6800,3.6,41000,medium
+Notification Center,Q3 2025,shipped,14200,4.8,95000,high
+Template Library,Q4 2025,planned,0,0.0,0,medium
+Workflow Builder,Q4 2025,planned,0,0.0,0,high
+Advanced Analytics,Q3 2025,shipped,8900,4.9,175000,high
+Real-time Sync,Q2 2025,shipped,13400,4.1,88000,high
+File Preview,Q1 2025,shipped,7200,3.9,29000,low
+Version History,Q2 2025,shipped,5800,4.2,45000,medium
+Batch Operations,Q3 2025,shipped,4600,3.8,38000,medium
+Integrations Hub,Q4 2025,in_progress,0,0.0,0,high
