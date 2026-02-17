@@ -1,0 +1,376 @@
+The Builder PM Method: A Complete Guide
+Build, Evaluate & Ship AI Products
+
+By Mehdi Bargach
+
+========================================
+CHAPTER 1: WHY THIS METHOD EXISTS
+========================================
+
+The AI product landscape has fundamentally changed. Between 2023 and 2026, the tools available to Product Managers evolved from theoretical frameworks to practical building instruments. Claude Code, Cursor, Lovable, Replit, and similar AI-powered development tools made it possible for non-engineers to build functional software products.
+
+Yet most Product Managers remained stuck in the old paradigm: writing specs, handing them to engineers, and waiting weeks for a prototype. The gap between "I have a product idea" and "I have a working prototype" was measured in sprints, not hours.
+
+The Builder PM Method was created to close this gap. It is a systematic approach for Product Managers who build AI products themselves, using AI tools as their primary development instrument. The method doesn't replace engineers — it changes when and how the PM contributes to the build process.
+
+The core insight behind the method is counterintuitive: in AI products, shipping is easy but evaluating is hard. Traditional software has deterministic outputs — the same input always produces the same output. AI products have probabilistic outputs — the same question might produce different answers each time. This fundamental difference requires a different approach to product development.
+
+The Builder PM Method consists of four phases arranged in two iteration loops:
+
+FRAME → BUILD ⟷ EVALUATE → SHIP
+
+The micro-loop (BUILD ⟷ EVALUATE) handles the probabilistic nature of AI outputs. You build, evaluate, and iterate until the outputs consistently meet quality standards. The macro-loop (SHIP → FRAME V2) captures learnings from production and feeds them into the next development cycle.
+
+========================================
+CHAPTER 2: THE FRAME PHASE
+========================================
+
+FRAME is the first phase of the Builder PM Method. Its purpose is to define WHAT you are building and WHY before opening any editor or writing any code. The principle is simple: clarity before action.
+
+The primary artifact of the FRAME phase is the Builder PM 1-Pager. This is a single-document specification that contains everything needed to understand and build the product. Unlike traditional Product Requirements Documents (PRDs) that can run 20-50 pages, the 1-Pager forces brevity and precision. If you can't explain your product in one page, you don't understand it well enough.
+
+The 1-Pager contains eight sections:
+
+SECTION 1: PROBLEM STATEMENT
+What pain are we solving? What exists today? Why is the current solution broken or insufficient? This section must describe a real, observable pain — not a hypothetical one. The best problem statements include data: "PMs spend an average of 4 hours per week manually searching through research documents" is better than "PMs have trouble finding information."
+
+SECTION 2: USER DEFINITION
+Who is the primary user? Who is the secondary user? In what context do they experience the pain? User definitions should be specific enough to be actionable. "Product Managers" is too broad. "Product Managers at B2B SaaS companies who manage 3+ products simultaneously and receive weekly research reports exceeding 50 pages" is actionable.
+
+SECTION 3: SOLUTION DESCRIPTION
+What are we building? Described in 3-5 bullet points maximum. Each bullet should map to a specific user pain from Section 1. This mapping is called Pain-to-Feature Mapping, and it is one of the original contributions of the Builder PM Method. If a feature doesn't map to a documented pain, it gets cut. No exceptions.
+
+SECTION 4: SUCCESS METRICS
+How do we know the product works? Each metric must be testable with a binary outcome: PASS or FAIL. No vanity metrics, no "increase engagement by 20%." Instead: "A user can upload a 50-page PDF, ask a factual question, and receive a correct answer with a citation pointing to the right page. Tested on 10 questions, 8/10 must pass."
+
+The Success Metrics table has three columns:
+- Metric: What we're measuring
+- Target: The specific threshold for PASS
+- How to Test: The exact procedure to verify
+
+SECTION 5: SCOPE
+What is IN the MVP and what is explicitly OUT. The OUT list is as important as the IN list. It prevents scope creep and sets clear expectations. Example: "IN: Single-user Q&A with citations. OUT: Multi-user collaboration, authentication, conversation memory."
+
+SECTION 6: RISKIEST ASSUMPTION
+The single hypothesis that, if wrong, would invalidate the entire project. This is the most important section of the 1-Pager. Everything else can be adjusted; if the Riskiest Assumption fails, the project should be killed or fundamentally pivoted.
+
+For DocuQuery AI, the Riskiest Assumption was: "A RAG pipeline with 500-token chunks and ChromaDB can provide accurate, precisely cited answers from 50+ page documents."
+
+SECTION 7: KEY ARCHITECTURE DECISIONS
+A table of technical choices with three columns: Decision, Choice, and Rationale. These decisions are made upfront to prevent analysis paralysis during the BUILD phase. Examples: "Vector DB: ChromaDB (free, local, simple enough for MVP)" or "LLM: Claude Sonnet (best instruction following for citation format)."
+
+SECTION 8: OPEN QUESTIONS
+What don't we know yet? These must be resolved during BUILD or converted into Architecture Decision Records (ADRs). Open questions are not blockers — they are acknowledged unknowns that will be resolved through building, not through more planning.
+
+The FRAME phase ends with a ritual called the FRAME Review. The question: "Would a stranger understand this project in 2 minutes by reading the 1-Pager?" If yes, proceed to BUILD. If no, rewrite until yes.
+
+========================================
+CHAPTER 3: THE BUILD PHASE
+========================================
+
+BUILD is where the product takes shape. But unlike traditional development where building means "engineers write code for weeks," in the Builder PM Method, building means the PM writes code with AI tools — starting with the thinnest possible end-to-end slice.
+
+THE BUILD GAMEPLAN
+
+Before writing the first line of code, the PM creates a BUILD Gameplan. This document decomposes the MVP into vertical slices — NOT horizontal layers.
+
+The critical anti-pattern to avoid: never decompose work into "backend first, then frontend, then integration." This horizontal approach means you don't have a working product until everything is connected at the end. Instead, decompose into vertical slices where each slice goes from data input to user-visible output.
+
+The BUILD Gameplan contains:
+- The Walking Skeleton definition
+- Scope definitions (2-3 additional slices)
+- Micro-tests for each slice
+- Exit criteria for the BUILD phase
+
+CONTEXT SETUP
+
+Before writing code, the PM performs a Context Setup. This means installing the 1-Pager's key information into the AI tool's persistent context:
+- For Claude Code: create a CLAUDE.md file at the project root
+- For Cursor: create a .cursorrules file
+- For Lovable: use the initial project description
+
+Context Setup ensures that every code generation decision aligns with the 1-Pager's architecture decisions. Without it, the AI tool makes generic choices that may conflict with the product strategy.
+
+THE WALKING SKELETON
+
+The Walking Skeleton is always the first thing you build. No exceptions. The term comes from Alistair Cockburn (2004, Crystal Clear methodology) and the related concept of "Tracer Bullets" from Hunt and Thomas (1999, The Pragmatic Programmer).
+
+A Walking Skeleton is the thinnest possible end-to-end slice that tests the Riskiest Assumption. For DocuQuery AI, it was: upload a TXT file → chunk it → embed it → store in a vector database → ask a question → retrieve relevant chunks → generate an answer with citations → display the answer.
+
+The Walking Skeleton is deliberately ugly, minimal, and incomplete. It doesn't need to handle errors gracefully. It doesn't need a polished UI. It doesn't need to support all file formats. It needs to do one thing: prove that the core technical approach works from start to finish.
+
+After the Walking Skeleton is built, the PM performs the Skeleton Check ritual. The question: "Does the Riskiest Assumption hold?" If YES, continue to Scopes. If NO, pivot or kill the project. Better to lose a day than a week.
+
+SCOPES
+
+After the Walking Skeleton passes the Skeleton Check, the PM builds additional Scopes. Each Scope is a vertical slice that adds a coherent piece of functionality to the product. Scopes are ordered by value — the most important one first.
+
+The term "Scope" comes from Shape Up (Ryan Singer, 2019, Basecamp). A Scope is "a piece of the problem, not a list of tasks." It has clear boundaries, a definition of done, and its own micro-test.
+
+For DocuQuery AI, the Scopes were:
+- Scope 1: PDF + CSV parsing (add file format support with page-level citations)
+- Scope 2: Citation precision + error handling (paragraph-level citations, edge cases)
+- Scope 3: UI polish with Lovable (clean interface for non-technical users)
+
+SCOPE CUTTING
+
+The Builder PM Method uses a configurable timebox called a Cycle. The Cycle duration depends on the project type:
+- Side project: 1 week
+- Startup feature: 2 weeks
+- Complete product: 4-6 weeks
+
+The scope adapts to the time, not the other way around. If the Cycle runs out of time, you cut Scopes from the bottom. Scope 3 goes first, then Scope 2 if needed. The Walking Skeleton is non-negotiable — it always ships.
+
+This is directly inspired by Shape Up's concept of "appetite" — the amount of time you're willing to invest before deciding if something is worth continuing.
+
+BUILD ARTIFACTS
+
+The BUILD phase produces several artifacts:
+
+1. BUILD Gameplan: Created before coding. Defines the Walking Skeleton and Scopes.
+2. Build Log: A continuous journal documenting decisions, learnings, and progress. One entry per work session minimum. The Build Log serves multiple purposes — it's a debugging aid during BUILD, raw material for the book/content, and evidence for the Project Dossier.
+3. Architecture Decision Records (ADRs): Formal documentation of significant technical decisions. Each ADR follows the template: Context → Options Considered → Decision → Consequences.
+
+PM VIBE CODING
+
+The key technique used during BUILD is PM Vibe Coding — the practice of a Product Manager using AI tools (Claude Code, Cursor, Lovable) to write functional code. The term "Vibe Coding" was coined by Andrej Karpathy in 2025 to describe a style of programming where you describe what you want in natural language and let the AI write the code.
+
+In the Builder PM Method, Vibe Coding is a technique within the BUILD phase — not the name of the method. The PM doesn't need to be an expert programmer. They need to understand the architecture, make product decisions, and communicate clearly with the AI tool. The AI handles syntax, implementation details, and boilerplate code.
+
+The PM's role during Vibe Coding is to:
+- Set up the context (CLAUDE.md, .cursorrules)
+- Define what each slice should do (from the Gameplan)
+- Make product decisions when the AI encounters trade-offs
+- Test the output against the micro-test criteria
+- Document decisions in the Build Log and ADRs
+
+========================================
+CHAPTER 4: THE EVALUATE PHASE
+========================================
+
+EVALUATE is the phase that makes the Builder PM Method AI-native. In traditional software, testing is relatively straightforward: given input X, the output should always be Y. In AI products, the output is probabilistic — the same input might produce slightly different outputs each time.
+
+The key insight: "In AI, shipping is easy. Evaluating is hard."
+
+Deploying an AI application is technically simple — push the code, expose an endpoint, done. But knowing whether the AI produces good outputs consistently? That requires systematic evaluation.
+
+THE EVAL GATE
+
+The EVALUATE phase tests every Success Metric defined in the 1-Pager. Each metric gets a binary grade: PASS or FAIL. There is no "partially passes" or "good enough." Binary grading forces clarity.
+
+The ritual at the end of EVALUATE is the Eval Gate. The question: "Do all Success Metrics pass?"
+
+If NO → return to BUILD (this is the micro-loop). The PM identifies what's failing, adjusts the code (chunking strategy, prompt engineering, retrieval parameters), and re-evaluates. This loop continues until all metrics pass.
+
+If YES → proceed to SHIP.
+
+The micro-loop (BUILD ⟷ EVALUATE) is the beating heart of AI product development. Unlike traditional software where you build once and ship, AI products require iterative refinement of prompts, parameters, and pipeline configuration.
+
+EVALUATION METHODS
+
+Several techniques can be used during EVALUATE:
+
+1. Manual Testing: The PM (or test users) manually verifies outputs against expected results. This is the simplest method and sufficient for Walking Skeletons and early Scopes.
+
+2. Golden Dataset: A curated set of question-answer pairs where the correct answer is known. The system is tested against this dataset, and accuracy is measured as a percentage.
+
+3. LLM-as-Judge: Using a separate LLM (often a more powerful model) to evaluate the outputs of the product's LLM. For example, using Claude Opus to evaluate whether Claude Sonnet's answers are accurate and properly cited.
+
+4. A/B Testing: Running two versions of the pipeline (different chunk sizes, different prompts, different models) and comparing which produces better results. This technique is particularly valuable for the PM with CRO/experimentation experience.
+
+The EVALUATE phase produces one artifact: the Eval Report. This document records each metric tested, the results, and any identified issues. The template follows a simple structure: Metric → Target → Actual Result → PASS/FAIL → Notes.
+
+========================================
+CHAPTER 5: THE SHIP PHASE
+========================================
+
+SHIP is the phase that bridges the gap between "it works on my laptop" and "real users can access it." This gap is where 52% of AI projects die — they produce impressive demos but never reach production.
+
+The SHIP phase covers three activities:
+
+DEPLOY
+
+The product is deployed to a publicly accessible environment. For web applications, this typically means:
+- Backend/API deployed to a cloud platform (Render, Railway, AWS, etc.)
+- Frontend deployed to a static hosting service (Vercel, Netlify, etc.)
+- Environment variables configured in production
+- CORS (Cross-Origin Resource Sharing) configured to allow the frontend to communicate with the backend
+
+The Deploy Checklist template ensures nothing is missed. It includes a critical Pre-Deploy Gate: "Eval Gate passed — all Success Metrics verified." This prevents shipping a product that hasn't been properly evaluated.
+
+DOCUMENT
+
+The product's documentation is updated to reflect its final state:
+- README with demo link and screenshots
+- Architecture documentation aligned with reality (not the initial plan)
+- Build Log entry for the SHIP phase
+
+PORTFOLIO
+
+The product is packaged for portfolio presentation through the Project Dossier. This artifact combines the 1-Pager summary, architecture diagram, key ADRs, evaluation results, and personal learnings into a single document that can be shared with recruiters, hiring managers, or stakeholders.
+
+SHIP RITUALS
+
+The SHIP phase has two rituals:
+
+1. Ship Review: "Is the product ready to be put in the hands of real users?" This is not about perfection — it's about whether the core flow works reliably and the product doesn't crash on common paths.
+
+2. Macro Retro: "What learnings from this project feed the next FRAME?" This ritual closes the macro-loop. Learnings might include: "500-token chunks were too large for precise citations — try 300 next time" or "The Streamlit UI was sufficient for testing but confused non-technical users — use Lovable from the start next time."
+
+========================================
+CHAPTER 6: THE ITERATION LOOPS
+========================================
+
+The Builder PM Method has two distinct iteration loops that operate at different timescales.
+
+THE MICRO-LOOP: BUILD ⟷ EVALUATE
+
+The micro-loop is the inner loop of the method. It operates within a single Cycle and handles the iterative refinement of AI outputs.
+
+The loop works as follows:
+1. BUILD: Implement or adjust the pipeline
+2. EVALUATE: Test against Success Metrics
+3. If FAIL: Return to BUILD with specific feedback on what failed
+4. If PASS: Exit the loop, proceed to SHIP
+
+The micro-loop is what makes the method AI-native. In deterministic software, you build it correctly once and move on. In AI products, you build, evaluate, adjust, evaluate again, adjust again, until the probabilistic outputs consistently meet quality thresholds.
+
+Typical micro-loop iterations include:
+- Adjusting the system prompt to reduce hallucinations
+- Changing chunk size or overlap to improve retrieval quality
+- Adding few-shot examples to improve output formatting
+- Tuning the number of retrieved chunks (Top K) to balance context and noise
+
+THE MACRO-LOOP: SHIP → FRAME V2
+
+The macro-loop is the outer loop. It operates across Cycles and captures learnings from production.
+
+After SHIP, the PM conducts the Macro Retro. Insights from real-world usage feed into a new FRAME phase for version 2 (or a completely new product). Examples:
+- "Users consistently asked questions that required cross-document search — add this to V2"
+- "Citation quality degraded significantly on documents longer than 100 pages — investigate better chunking strategies"
+- "The most requested feature was conversation memory — users want to ask follow-up questions"
+
+The macro-loop embodies the Lean Startup principle of Build-Measure-Learn, but with two critical additions:
+1. FRAME (structured problem definition before building — what Lean Startup's "Build" phase lacks)
+2. SHIP (explicit deployment and documentation — what Lean Startup's "Learn" phase skips)
+
+========================================
+CHAPTER 7: TEMPLATES AND RITUALS
+========================================
+
+The Builder PM Method includes seven templates and five rituals.
+
+SEVEN TEMPLATES:
+
+1. Builder PM 1-Pager (FRAME phase)
+   Purpose: Define the product in one page
+   Contains: Problem, User, Solution, Metrics, Scope, Riskiest Assumption, Architecture Decisions, Open Questions
+
+2. BUILD Gameplan (BUILD phase, start)
+   Purpose: Decompose MVP into vertical slices
+   Contains: Walking Skeleton definition, Scope definitions, Micro-tests, Exit criteria
+
+3. Build Log (BUILD phase, continuous)
+   Purpose: Document decisions and learnings in real-time
+   Contains: Date, Phase, What happened, Decisions made, Time spent, Next step
+
+4. Architecture Decision Record / ADR (BUILD phase)
+   Purpose: Document significant technical decisions
+   Contains: Context, Options Considered, Decision, Consequences
+
+5. Eval Report (EVALUATE phase)
+   Purpose: Record evaluation results
+   Contains: Metric, Target, Actual Result, PASS/FAIL, Notes
+
+6. Deploy Checklist (SHIP phase)
+   Purpose: Ensure nothing is missed before going live
+   Contains: Infrastructure checks, Pre-Deploy Gate, Quality checks, Documentation checks, Post-Deploy verification
+
+7. Project Dossier (post-SHIP)
+   Purpose: Package the project for portfolio presentation
+   Contains: 1-Pager summary, Architecture diagram, Key ADRs, Eval results, Learnings, Content extracted
+
+FIVE RITUALS (GO/NO-GO checkpoints):
+
+1. FRAME Review — End of FRAME
+   Question: "Would a stranger understand this project in 2 minutes?"
+   If NO-GO: Rewrite the 1-Pager
+
+2. Skeleton Check — After Walking Skeleton
+   Question: "Does the Riskiest Assumption hold?"
+   If NO-GO: Pivot or kill the project
+
+3. Eval Gate — End of EVALUATE
+   Question: "Do all Success Metrics pass?"
+   If NO-GO: Return to BUILD (micro-loop)
+
+4. Ship Review — End of SHIP
+   Question: "Is the product ready for real users?"
+   If NO-GO: Fix issues before launching
+
+5. Macro Retro — After SHIP
+   Question: "What learnings feed the next FRAME?"
+   If NO-GO: Document in Project Dossier anyway
+
+Each ritual is a binary decision point. The method's strength comes from these forced checkpoints — they prevent the most common failure modes in product development: building without clarity (FRAME Review), persisting on a broken approach (Skeleton Check), shipping untested products (Eval Gate), and not learning from the process (Macro Retro).
+
+========================================
+CHAPTER 8: POSITIONING AND DIFFERENTIATION
+========================================
+
+The Builder PM Method occupies a specific position in the product management landscape.
+
+VS SCRUM:
+Scrum uses fixed-length sprints (typically 2 weeks) with a Product Backlog, Sprint Backlog, and multiple ceremonies (Planning, Daily Standup, Review, Retro). The Builder PM Method uses configurable Cycles (1 week to 6 weeks), replaces the infinite backlog with a fixed-scope 1-Pager, and replaces sprint ceremonies with five focused rituals. The key difference: Scrum doesn't have an explicit EVALUATE phase for AI products.
+
+VS LEAN STARTUP:
+Lean Startup's Build-Measure-Learn loop is the closest ancestor to the Builder PM Method. The key additions: FRAME provides structured problem definition (Lean Startup jumps straight to Build), and SHIP includes explicit deployment and documentation (Lean Startup's Learn phase assumes you're already in production). The Builder PM Method also makes the micro-loop explicit — something Lean Startup implies but doesn't formalize.
+
+VS SHAPE UP:
+Shape Up (Basecamp) introduced the concepts of appetite (fixed time, variable scope), Scopes (vertical slices), and the betting table. The Builder PM Method borrows the appetite concept (Cycles) and Scopes, but adds AI-specific evaluation, the Walking Skeleton as a mandatory first build, and the PM as builder rather than PM as shaper.
+
+VS MARILY NIKA'S AI PM APPROACH:
+Marily Nika is the most prominent voice in AI Product Management education. Her approach targets PMs who work WITH engineering teams — the traditional PM role applied to AI products. The Builder PM Method targets PMs who BUILD themselves using AI tools. This is a fundamentally different audience and workflow.
+
+WHAT IS ORIGINAL:
+
+1. "Builder PM" as a term — unclaimed in the PM space as of 2026
+2. The integrated system (1-Pager + Walking Skeleton + AI Eval + SHIP) — nobody combines all four
+3. EVALUATE as a dedicated phase — most methodologies bury evaluation inside "testing"
+4. The SHIP phase — addressing the prototype-to-production gap where 52% of AI projects die
+5. Context Setup as a formalized practice — configuring AI tools with product context before coding
+6. Pain-to-Feature Mapping in the 1-Pager — ensuring every feature traces to a user pain
+7. Scope Scoring with a Risk criterion linked to the Riskiest Assumption
+
+WHAT IS ADAPTED (referenced, not invented):
+
+- 1-Pagers: Lenny Rachitsky, Asana, Amazon PR/FAQ
+- Walking Skeleton: Cockburn (2004), Hunt & Thomas (1999)
+- Vertical Slicing: Scrum.org, Shape Up, Jimmy Bogard
+- Appetite / Timebox: Shape Up (Singer, 2019)
+- Build-Measure-Learn: Lean Startup (Ries, 2011)
+- Vibe Coding: Karpathy (2025)
+- Architecture Decision Records: Nygard (2011)
+
+The method's intellectual honesty is deliberate: every borrowed concept is attributed, and every original contribution is identified. This prevents the common criticism of "you just renamed Lean Startup" by clearly showing what's added and what's adapted.
+
+========================================
+APPENDIX: THE CYCLE TIMEBOX
+========================================
+
+The Cycle is the Builder PM Method's answer to "how long should this take?" It is a configurable timebox — a fixed amount of time within which the scope must fit.
+
+The key question when starting a Cycle: "How much time are you willing to invest before deciding if this is worth continuing?"
+
+Recommended Cycle durations:
+- Side project (learning, portfolio): 1 week
+- Startup feature (internal tool, MVP): 2 weeks
+- Complete product (customer-facing): 4-6 weeks
+
+The Cycle duration is set BEFORE the work begins. If the work doesn't fit in the Cycle, you cut scope — never extend the time. This discipline prevents the most common project failure mode: "just one more week" repeated indefinitely.
+
+Within a Cycle, the phases flow as: FRAME (10-15% of time) → BUILD (50-60%) → EVALUATE (15-20%) → SHIP (10-15%). These percentages are guidelines, not rules. A 1-week side project might spend 1 hour on FRAME, 3 days on BUILD, 1 day on EVALUATE, and half a day on SHIP.
+
+The scope-cutting order is always bottom-up: Scope 3 drops first, then Scope 2, then Scope 1 if necessary. The Walking Skeleton never drops — it is the non-negotiable minimum that tests the Riskiest Assumption.
+
+This approach is directly inspired by Ryan Singer's "appetite" concept in Shape Up: "Instead of asking 'how long will this take?' ask 'how much time do we want to spend on this?'" The answer shapes the scope, not the other way around.

@@ -1,0 +1,57 @@
+The Builder PM Method
+
+The Builder PM Method is a systematic approach for Product Managers who build AI products themselves, rather than just writing specs for engineers. Created by Mehdi Bargach, the method consists of four phases: FRAME, BUILD, EVALUATE, and SHIP.
+
+FRAME Phase
+
+The FRAME phase is about defining WHAT you build and WHY before opening the editor. The key artifact is the Builder PM 1-Pager, which contains the problem statement, user definition, solution description, success metrics, scope decisions, and architecture decisions. The ritual at the end of FRAME is the FRAME Review, where you ask: "Would a stranger understand this project in 2 minutes?"
+
+The 1-Pager includes a unique element called Pain-to-Feature Mapping, where every feature must trace back to a specific user pain point. If a feature doesn't map to a pain, it gets cut. The 1-Pager also requires identifying the Riskiest Assumption — the single hypothesis that, if wrong, would invalidate the entire project.
+
+BUILD Phase
+
+The BUILD phase uses vertical slicing, not horizontal decomposition. This means you never break work into backend, then frontend, then integration. Instead, you start with a Walking Skeleton — the thinnest possible end-to-end slice that tests your Riskiest Assumption. The Walking Skeleton concept comes from Alistair Cockburn's Crystal Clear methodology and the Tracer Bullet idea from Hunt and Thomas's Pragmatic Programmer.
+
+After the Walking Skeleton, you add Scopes. Each Scope is a vertical slice that adds a coherent piece of functionality. Scopes are ordered by value, not by technical layer. The key technique in BUILD is PM Vibe Coding — using AI tools like Claude Code, Cursor, or Lovable to build the product yourself.
+
+The BUILD phase has three artifacts: the BUILD Gameplan (created before coding), the Build Log (continuous documentation), and Architecture Decision Records (ADRs). There is also a critical practice called Context Setup, where the PM installs the 1-Pager content into the AI tool's persistent context (CLAUDE.md for Claude Code, .cursorrules for Cursor).
+
+EVALUATE Phase
+
+The EVALUATE phase is where you test the Success Metrics from the 1-Pager. Each metric gets a binary grade: PASS or FAIL. This is the phase that makes the method AI-native, because in AI products, the output is probabilistic, not deterministic. The key insight is: "In AI, shipping is easy. Evaluating is hard."
+
+The ritual is the Eval Gate. If metrics FAIL, you return to BUILD (this is the micro-loop). If metrics PASS, you proceed to SHIP. The artifact is the Eval Report.
+
+SHIP Phase
+
+The SHIP phase covers deploying the product, creating documentation, and making it portfolio-ready. The artifacts are the Deploy Checklist and the Project Dossier. The Deploy Checklist includes a Pre-Deploy Gate that verifies the Eval Gate was passed.
+
+The SHIP phase has two rituals: the Ship Review ("Is the product ready for real users?") and the Macro Retro ("What learnings feed the next FRAME?"). The macro-loop connects SHIP back to FRAME for the next iteration cycle.
+
+Iteration Loops
+
+The method has two iteration loops:
+
+1. The Micro-Loop (BUILD to EVALUATE): iterate until metrics pass. This is the AI-native loop because output is probabilistic.
+
+2. The Macro-Loop (SHIP to FRAME V2): learnings from shipping feed the next cycle.
+
+The Cycle is a configurable timebox: 1 week for a side project, 2 weeks for a startup feature, 4-6 weeks for a complete product. The scope adapts to the time, not the other way around. If something doesn't fit in the Cycle, you cut scope from the bottom (Scope 3 first, then Scope 2). The Walking Skeleton is non-negotiable.
+
+Templates
+
+The method includes seven templates:
+
+1. Builder PM 1-Pager (FRAME)
+2. BUILD Gameplan (BUILD)
+3. Build Log (BUILD, continuous)
+4. Architecture Decision Record / ADR (BUILD)
+5. Eval Report (EVALUATE)
+6. Deploy Checklist (SHIP)
+7. Project Dossier (post-SHIP)
+
+Differentiation
+
+The Builder PM Method differentiates from existing frameworks in several ways. Unlike Scrum, it uses configurable timeboxes instead of fixed sprints, and it includes an explicit EVALUATE phase for AI products. Unlike Lean Startup's Build-Measure-Learn, it adds FRAME (structured problem definition) and SHIP (prototype-to-production gap). Unlike Shape Up, it includes AI-specific evaluation and the micro-loop for probabilistic outputs.
+
+The term "Builder PM" is unclaimed in the PM space. While "AI PM" is dominated by Marily Nika (theory, manager perspective), "Builder PM" targets PMs who build themselves using AI tools. The vibe coding trend (+6,700% search growth) has zero PM-specific content, creating a land-grab opportunity.

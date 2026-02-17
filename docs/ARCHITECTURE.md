@@ -1,5 +1,9 @@
 # DocuQuery AI - Architecture
 
+> This is a technical reference document. It describes HOW the system works (components).
+> For WHAT we're building and WHY, see the [Builder PM 1-Pager](BUILDER-PM-1-PAGER.md).
+> For the BUILD order (vertical slices, not components), see the [BUILD Gameplan](BUILD-GAMEPLAN.md).
+
 ## System Design
 
 ### High-Level Flow
@@ -11,7 +15,7 @@
        │
        ▼
 ┌─────────────────┐
-│  Upload Service │  ← PDF/TXT/DOCX
+│  Upload Service │  ← PDF/TXT/CSV
 └────────┬────────┘
          │
          ▼
@@ -31,7 +35,7 @@
          │
          ▼
 ┌─────────────────┐
-│   Vector DB     │  ← Pinecone/Chroma
+│   Vector DB     │  ← ChromaDB
 └────────┬────────┘
          │
          │ (Query Time)
@@ -42,7 +46,7 @@
          │
          ▼
 ┌─────────────────┐
-│  LLM Generator  │  ← Claude/GPT-4
+│  LLM Generator  │  ← Claude Sonnet
 └────────┬────────┘
          │
          ▼
@@ -55,13 +59,13 @@
 
 ### 1. Document Processing Pipeline
 
-**Input**: PDF, TXT, DOCX
+**Input**: PDF, TXT, CSV
 **Output**: Structured chunks with metadata
 
 **Steps**:
 - Extract text from document
 - Clean and normalize
-- Split into chunks (1000 chars, 200 overlap)
+- Split into chunks (500 tokens, 100 token overlap)
 - Add metadata (page #, doc ID, timestamp)
 
 ### 2. Embedding & Indexing
@@ -70,7 +74,7 @@
 - Dimension: 1536
 - Cost: $0.02 / 1M tokens
 
-**Vector DB**: Pinecone (cloud) or Chroma (local)
+**Vector DB**: ChromaDB (local)
 - Index type: Cosine similarity
 - Top-k retrieval: 5 chunks
 
@@ -84,7 +88,7 @@
 
 ### 4. Answer Generation
 
-**LLM**: Claude 3.5 Sonnet (default) or GPT-4
+**LLM**: Claude Sonnet
 
 **Prompt Template**:
 ```
@@ -107,14 +111,17 @@ Answer:
 
 ## Tech Stack Rationale
 
-### Why Claude over GPT-4?
+### Why Claude Sonnet only?
 - Better at following citation instructions
 - Stronger reasoning for complex queries
 - Lower cost per token
+- Single LLM = simpler billing and codebase
 
-### Why Pinecone over Chroma?
-- **Pinecone** (prod): Managed, scalable, global deployment
-- **Chroma** (dev): Free, local, good for prototyping
+### Why ChromaDB only?
+- Free, local, no account/API key needed
+- Good enough for MVP (single-user, moderate doc volume)
+- Reduces infrastructure complexity
+- Upgrade path to Pinecone exists if needed post-MVP
 
 ### Why FastAPI?
 - Async support (important for LLM calls)
