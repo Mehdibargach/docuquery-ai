@@ -20,3 +20,25 @@ BUILD — Scope 1 (PDF + CSV parsing, end-to-end)
 ## Anti-patterns
 - NEVER decompose into backend → frontend → integration
 - Always vertical slices (Walking Skeleton → Scopes)
+
+## Build Rules (post-Scope 1 retro)
+
+### 1. Micro-test = gate, pas une étape
+Ordre obligatoire : Code → Micro-test PASS → Doc (avec résultats) → Commit.
+Aucun commit tant que le micro-test n'est pas PASS.
+
+### 2. Le gameplan fait autorité sur les données de test
+Si le gameplan dit "50-page PDF", c'est 50 pages. Pas de raccourci sur la taille/réalisme des données de test.
+
+### 3. Checklist qualité walkthrough
+Chaque BUILD-WALKTHROUGH doit vérifier TOUS ces critères :
+- [ ] Chaque concept nouveau expliqué depuis zéro
+- [ ] Code annoté ligne par ligne (pas en blocs)
+- [ ] Au moins 3 analogies accessibles pour non-tech
+- [ ] Section "What went wrong" (même si rien n'a cassé)
+- [ ] Section "Micro-test results" avec tableau PASS/FAIL
+- [ ] Diagramme d'architecture complet mis à jour
+- [ ] "Why not" explicite pour chaque alternative rejetée
+
+### 4. Pas de mode batch
+Exécution séquentielle avec validation à chaque phase (code prêt → micro-test passé → doc écrite). Ne pas tout livrer d'un coup.

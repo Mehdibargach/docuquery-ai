@@ -94,11 +94,21 @@ Modified 4 existing files:
 - Scanned PDF warning at <100 chars — graceful degradation, not a crash
 
 **Problems encountered:**
-- None critical. pdfplumber installed cleanly, accepted BytesIO as expected. CSV parser handles quoted fields with commas correctly.
+- Initial test PDF was 3 pages instead of 50+ (gameplan violation). Fixed: generated 59-page NovaPay PRD.
+- fpdf2 crashed on Unicode characters (em-dash, smart quotes). Fixed: ASCII replacement function.
+- `load_dotenv()` fails from stdin (no stack frame). Fixed: `dotenv_values()` + `os.environ.update()`.
+- Automated micro-test matching reported 3/6 FAIL — all 6 answers were correct (matching too strict, plus one expected value was wrong on our side).
 
-**Time spent:** ~1h
+**Micro-test results: 6/6 PASS**
+- PDF (59 pages, 48 chunks): 3/3 — budget ($18.5M), latency (340ms), design partners (15) all correct with accurate page citations
+- CSV (25 rows, 4 chunks): 2/2 — highest score (Advanced Analytics, 4.9) and shipped count (20) correct with row citations
+- TXT (regression): 1/1 — zero regression, same behavior as Walking Skeleton
 
-**Next step:** Micro-test PDF (3 questions) + CSV (2 questions) + TXT regression, then documentation
+**Process correction:** Added 4 Build Rules to CLAUDE.md: (1) micro-test = gate before commit, (2) gameplan authoritative on test data, (3) walkthrough quality checklist, (4) no batch mode.
+
+**Time spent:** ~4h (code: 1h, 59-page PDF generation: 1h, micro-tests + debugging env vars: 1h, walkthrough rewrite: 1h)
+
+**Next step:** Scope 2 (Citation precision + error handling)
 
 ---
 
