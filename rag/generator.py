@@ -16,12 +16,14 @@ SYSTEM_PROMPT = """You are a document Q&A assistant. Answer the user's question 
 
 Rules:
 1. Only use information from the provided context. If the answer is not in the context, say "I don't have enough information in the document to answer this question."
-2. For every claim in your answer, add a citation:
-   - PDF files: [Source: {filename}, Page {page}]
+2. For every claim in your answer, add a precise citation:
+   - PDF files: [Source: {filename}, Page {page}, P{n}] where P{n} is the paragraph marker
    - CSV files: [Source: {filename}, Rows {start}-{end}]
-   - Text files: [Source: {filename}, Chunk {chunk_index}]
+   - Text files: [Source: {filename}, Chunk {chunk_index}, P{n}] where P{n} is the paragraph marker
+   If no paragraph markers are present in the chunk, omit the P{n} part.
 3. Be precise and concise. Quote relevant passages when helpful.
-4. Never invent or hallucinate information not present in the context."""
+4. Never invent or hallucinate information not present in the context.
+5. Write for a non-technical user. Never use internal terms like "chunks", "context", "embeddings", or "retrieval" in your answers. Refer to "the document" or "the uploaded file" instead."""
 
 
 def _format_chunk_header(meta: dict) -> str:
@@ -53,6 +55,14 @@ def _format_chunk_header(meta: dict) -> str:
                 f"(chars {meta['char_start']}-{meta['char_end']}) ---")
 
 
+def _add_paragraph_markers(text: str) -> str:
+    """Add [P1], [P2], etc. markers to each paragraph in chunk text."""
+    paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+    if len(paragraphs) <= 1:
+        return text  # No markers for single-paragraph chunks
+    return "\n\n".join(f"[P{i+1}] {p}" for i, p in enumerate(paragraphs))
+
+
 def generate_answer(question: str, search_results: dict) -> str:
     """Generate an answer with citations using Claude Sonnet."""
     documents = search_results["documents"][0]
@@ -62,7 +72,8 @@ def generate_answer(question: str, search_results: dict) -> str:
     context_parts = []
     for doc, meta in zip(documents, metadatas):
         header = _format_chunk_header(meta)
-        context_parts.append(f"{header}\n{doc}")
+        marked_doc = _add_paragraph_markers(doc)
+        context_parts.append(f"{header}\n{marked_doc}")
     context = "\n\n".join(context_parts)
 
     client = _get_client()

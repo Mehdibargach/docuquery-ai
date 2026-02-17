@@ -12,7 +12,7 @@ RAG-powered Q&A system. Upload documents, ask questions in natural language, get
 - **File types**: TXT (Walking Skeleton), then PDF + CSV (Scope 1)
 
 ## Current Phase
-BUILD — Scope 1 (PDF + CSV parsing, end-to-end)
+BUILD — Scope 3 (UI polish with Lovable)
 
 ## Riskiest Assumption
 "A RAG pipeline with 500-token chunks and cosine similarity search can provide accurate, precisely cited answers from 50+ page documents."

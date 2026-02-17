@@ -3,7 +3,7 @@ import numpy as np
 _chunks: list[dict] = []
 _embeddings: np.ndarray | None = None
 
-TOP_K = 5
+TOP_K = 10
 
 
 def add_chunks(chunks: list[dict], embeddings: list[list[float]]) -> None:

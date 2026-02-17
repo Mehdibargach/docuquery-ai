@@ -8,6 +8,7 @@ import tiktoken
 
 ENCODING = tiktoken.get_encoding("cl100k_base")
 CSV_CHUNK_TOKEN_LIMIT = 400
+SUPPORTED_EXTENSIONS = {"txt", "pdf", "csv"}
 
 
 @dataclass
@@ -19,10 +20,16 @@ class ParseResult:
     chunks: list[dict] | None = None  # Pre-built chunks for CSV
 
 
-def parse_file(uploaded_file) -> ParseResult:
-    """Route an uploaded file to the appropriate parser based on extension."""
+def parse_file(uploaded_file) -> ParseResult | None:
+    """Route an uploaded file to the appropriate parser based on extension.
+
+    Returns None if the file type is unsupported.
+    """
     filename = uploaded_file.name
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+
+    if ext not in SUPPORTED_EXTENSIONS:
+        return None
 
     if ext == "pdf":
         return _parse_pdf(uploaded_file, filename)

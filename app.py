@@ -23,6 +23,13 @@ with st.sidebar:
             with st.spinner("Processing..."):
                 # Parse file (routes to correct parser)
                 result = parse_file(uploaded_file)
+
+                # Check for unsupported file type
+                if result is None:
+                    ext = uploaded_file.name.rsplit(".", 1)[-1].lower() if "." in uploaded_file.name else "unknown"
+                    st.error(f"Unsupported file format: .{ext}. Please upload a .txt, .pdf, or .csv file.")
+                    st.stop()
+
                 filename = result.filename
 
                 # Warn if PDF has very little text (likely scanned)
@@ -40,6 +47,12 @@ with st.sidebar:
                     chunks = chunk_text(result.text, result.filename,
                                         file_type=result.file_type,
                                         page_map=result.page_map)
+
+                # Check for empty file
+                if not chunks:
+                    st.warning("This file appears to be empty or contains no extractable text. "
+                               "Please upload a file with content.")
+                    st.stop()
 
                 # Embed
                 chunk_texts = [c["text"] for c in chunks]
