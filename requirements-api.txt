@@ -1,0 +1,19 @@
+# API Framework
+fastapi
+uvicorn[standard]
+python-multipart
+
+# LLM & AI
+anthropic
+openai
+
+# Document Processing
+pdfplumber
+tiktoken
+
+# Vector Store (numpy-based)
+numpy
+
+# Utilities
+python-dotenv
+pydantic

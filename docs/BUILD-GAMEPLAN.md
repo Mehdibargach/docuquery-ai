@@ -61,7 +61,7 @@
 |-------|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|--------|
 | Walking Skeleton | FRAME Review | venv + APIs | test_doc.txt 10p | 5 tests defined | Done | 5/5 PASS | Done | WS.md | Done | `939f40b` | CLOSED |
 | Scope 1 (PDF+CSV) | Skeleton Check | pdfplumber | 59p PDF + 25-row CSV | 6 tests defined | Done | 5/6 + 1 PARTIAL | Done | S1.md | Done | `567b3da` | CLOSED (P3 → Scope 2) |
-| Scope 2 (Citation+Errors) | Scope 1 gate | none new | test_empty.txt + test_unsupported.docx | 7 tests defined | Done | 7/7 PASS | Done | S2.md | Done | pending | CLOSING |
+| Scope 2 (Citation+Errors) | Scope 1 gate | none new | test_empty.txt + test_unsupported.docx | 7 tests defined | Done | 7/7 PASS | Done | S2.md | Done | `91baa8d` | CLOSED |
 | Scope 3 | Scope 2 gate | — | — | — | — | — | — | — | — | — | NOT STARTED |
 
 ---

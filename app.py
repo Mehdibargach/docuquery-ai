@@ -1,3 +1,5 @@
+import time
+
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -82,6 +84,8 @@ else:
 
     if question:
         with st.spinner("Searching and generating answer..."):
+            t0 = time.time()
+
             # Embed question
             q_embedding = embed_query(question)
 
@@ -91,8 +95,11 @@ else:
             # Generate
             answer = generate_answer(question, results)
 
+            latency = time.time() - t0
+
         st.markdown("### Answer")
         st.markdown(answer)
+        st.caption(f"Latency: {latency:.1f}s")
 
         # Show retrieved chunks for transparency
         with st.expander("Retrieved chunks (debug)"):
