@@ -250,6 +250,44 @@ Micro-loop BUILD to fix E3 (BLOCKING fail on G2 factual accuracy).
 
 ---
 
+### 2026-02-19 — BUILD: Scope 3 (From Prototype to Product)
+
+**What happened:**
+Transformed DocuQuery AI from a local Streamlit prototype into a deployed, portfolio-grade product. Three slices executed sequentially:
+
+**Slice 1 — FastAPI Backend:** Created `api.py` with 3 REST endpoints (`/health`, `/upload`, `/query`). The key challenge: `parse_file()` expects Streamlit's `UploadedFile` interface (`.name`, sync `.read()`). FastAPI uses `UploadFile` (`.filename`, async). Solution: `_UploadFileAdapter` class in `api.py` — converts the interface without touching any RAG module. Zero lines changed in `rag/`.
+
+**Slice 2 — Render Deploy:** Created public GitHub repo (`github.com/Mehdibargach/docuquery-ai`). Added `Procfile`, `render.yaml`, `requirements-api.txt` (clean deps, no legacy ChromaDB/LangChain). Deployed on Render Starter ($7/mo) — zero cold start. All 3 endpoints verified identical to local.
+
+**Slice 3 — Lovable Frontend:** Built React/Tailwind frontend in Lovable using 3 structured prompts (structure → functionality → polish). Dark-first design (Linear/Vercel aesthetic, not Anthropic cream). Added `/about` page as PM case study: Problem → Key Decisions → Eval Metrics → What I'd Improve → Tech Stack → Built by.
+
+**Decisions made:**
+- Adapter pattern over modifying parse_file() — zero RAG changes, zero regression risk
+- Render Starter ($7/mo) over Free — no cold start, portfolio needs instant response
+- Public GitHub repo — portfolio piece, hiring managers check GitHub
+- Dark-first dev-tool aesthetic over Anthropic warm cream — distinctive, not derivative
+- User-friendly stepper labels ("Reading your document") over technical ("Parsing") — UX maturity in UI, technical depth in About page
+- `/about` as dedicated page (not modal) — directly linkable from CV/LinkedIn
+- "What I'd Improve" section on About — shows PM self-awareness, increases credibility
+
+**Problems encountered:**
+- CORS domain mismatch: Lovable editor uses `*.lovableproject.com`, published uses `*.lovable.app`. Initial regex only covered one. Fixed with combined pattern.
+- Lovable mock mode: AI generator faked API responses. Had to explicitly instruct to remove mocks and call real backend.
+- Error messages: Frontend showed HTTP codes ("400") instead of server messages ("Unsupported file format: .docx"). Fixed frontend to read response body.
+
+**Micro-test results: 26/26 PASS**
+- Backend local: 5/5 (health, PDF 48 chunks, query $18.5M, TXT 3 chunks, CSV 4 chunks)
+- Backend remote: 3/3 (identical results on Render)
+- Frontend Prompt 1: 5/5 (empty state, upload flow, loading, dark/light, error)
+- Frontend Prompt 2: 5/5 (query, citations, markdown, multi-Q&A, latency)
+- Frontend Prompt 3: 8/8 (mobile, error query, animations, footer, toggle, about, change doc, keyboard)
+
+**Time spent:** ~4h (backend: 1h, deploy: 30min, Lovable prompts + debugging: 1.5h, About page: 30min, documentation: 30min)
+
+**Next step:** SHIP — publish Lovable URL, update LinkedIn, prepare for demos
+
+---
+
 ## Running Notes
 
 - Started BUILD before FRAME — caught the mistake, went back. This is exactly what the method is designed to prevent.

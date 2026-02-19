@@ -12,7 +12,12 @@ RAG-powered Q&A system. Upload documents, ask questions in natural language, get
 - **File types**: TXT (Walking Skeleton), then PDF + CSV (Scope 1)
 
 ## Current Phase
-EVALUATE → CONDITIONAL GO — Micro-loop done (TOP_K 10→15). Next: SHIP (or Scope 3 UI Lovable)
+SHIP — Scope 3 complete (FastAPI + Render + Lovable). 26/26 micro-tests PASS. Product deployed and demo-ready.
+
+## Live URLs
+- **App**: Lovable (React/Tailwind, dark-first)
+- **Backend**: https://docuquery-ai-5rfb.onrender.com (FastAPI, Render Starter $7/mo)
+- **GitHub**: https://github.com/Mehdibargach/docuquery-ai (public)
 
 ## Riskiest Assumption
 "A RAG pipeline with 500-token chunks and cosine similarity search can provide accurate, precisely cited answers from 50+ page documents."
