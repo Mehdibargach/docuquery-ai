@@ -23,7 +23,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
+        "https://docuquery-ai-5rfb.onrender.com",
     ],
+    allow_origin_regex=r"https://.*\.lovable\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
