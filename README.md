@@ -1,126 +1,94 @@
 # DocuQuery AI
 
-> RAG-powered Q&A system for document analysis
+**Ask your documents anything. Cited answers from any file — in seconds.**
 
-Ask questions in natural language about your documents and get answers with citations.
+Upload a PDF, TXT, or CSV. Ask questions in natural language. Get answers grounded in your document with exact page and paragraph citations.
 
-## Overview
-
-DocuQuery AI is a Retrieval-Augmented Generation (RAG) system that enables intelligent document querying. Upload PDFs, contracts, or technical documentation and get precise answers backed by source citations.
-
-## Features
-
-- 📄 **Document Upload** - Support for PDF, TXT, DOCX
-- 🔍 **Semantic Search** - Vector-based retrieval using embeddings
-- 💬 **Natural Language Q&A** - Ask questions conversationally
-- 📌 **Source Citations** - Every answer includes relevant passages
-- ⚡ **Fast Retrieval** - Optimized chunking and indexing
-
-## Tech Stack
-
-### Backend
-- **LLM**: Claude/GPT-4 for answer generation
-- **Embeddings**: OpenAI text-embedding-3-small
-- **Vector DB**: Pinecone / Chroma
-- **Framework**: FastAPI (Python)
-
-### Frontend
-- **UI**: Built with Lovable
-- **Hosting**: Vercel
-
-### Infrastructure
-- **Backend Deploy**: Railway / Render
-- **Storage**: S3 for document storage
-
-## Architecture
-
-```
-Document Upload → Chunking → Embeddings → Vector DB
-                                              ↓
-User Query → Embedding → Semantic Search → Top K chunks
-                                              ↓
-                         LLM (with context) → Answer + Citations
-```
-
-## Local Setup
-
-### Prerequisites
-- Python 3.10+
-- Node.js 18+
-- API keys: OpenAI, Anthropic
-
-### Installation
-
-```bash
-# Backend
-cd backend
-pip install -r requirements.txt
-cp .env.example .env  # Add your API keys
-
-# Frontend
-cd frontend
-npm install
-cp .env.example .env.local  # Add backend URL
-```
-
-### Run Locally
-
-```bash
-# Backend
-cd backend
-uvicorn main:app --reload
-
-# Frontend
-cd frontend
-npm run dev
-```
-
-## Usage
-
-1. **Upload Document**: Drop PDF/TXT file in upload zone
-2. **Processing**: System chunks document and creates embeddings
-3. **Ask Questions**: Type your question in natural language
-4. **Get Answers**: Receive answer with highlighted source passages
-
-## Example Queries
-
-- "What are the termination clauses in this contract?"
-- "Summarize the key findings from section 3"
-- "What is the refund policy?"
-
-## Deployment
-
-### Backend (Railway)
-```bash
-railway init
-railway add
-railway up
-```
-
-### Frontend (Vercel)
-```bash
-vercel --prod
-```
-
-## Roadmap
-
-- [x] Basic RAG pipeline
-- [x] Document upload and chunking
-- [x] Semantic search and retrieval
-- [x] Answer generation with citations
-- [ ] Multi-document support
-- [ ] Advanced chunking strategies
-- [ ] Query history and caching
-- [ ] Support for images/tables in PDFs
-
-## Built With
-
-Part of **The Builder PM** methodology — demonstrating hands-on AI product development.
-
-**Build → Evaluate → Ship**
+**[Try it live](https://query-doc-master.lovable.app)** · [About & Metrics](https://query-doc-master.lovable.app/about)
 
 ---
 
-**Author**: Mehdi Bargach | [LinkedIn](https://linkedin.com/in/mehdibargach) | [The Builder PM](https://substack.com/@thebuilderpm)
+## How it works
 
-**License**: MIT
+```
+Upload → Parse → Chunk (500 tokens) → Embed (OpenAI) → Store (NumPy)
+                                                              ↓
+Question → Embed → Cosine similarity search (top 15) → Claude Sonnet → Answer + citations
+```
+
+1. Your document is parsed and split into 500-token chunks with 100-token overlap
+2. Each chunk is embedded using OpenAI `text-embedding-3-small`
+3. Your question is matched against chunks using cosine similarity
+4. Claude Sonnet generates an answer grounded only in the top 15 relevant chunks
+5. Every claim includes a citation (page, paragraph, or row reference)
+
+## Evaluation results
+
+| Metric | Score |
+|--------|-------|
+| Factual Accuracy | 87.5% |
+| Hallucination Rate | 0% |
+| Citation Accuracy | 75% |
+| Median Latency | 8.5s |
+
+Evaluated on 8 structured test questions across PDF, TXT, and CSV formats. Full eval report: [`docs/EVAL-REPORT.md`](docs/EVAL-REPORT.md)
+
+## Tech stack
+
+| Component | Technology |
+|-----------|-----------|
+| LLM | Claude Sonnet (Anthropic) |
+| Embeddings | text-embedding-3-small (OpenAI) |
+| Vector store | NumPy cosine similarity (in-memory) |
+| Backend | FastAPI (Python) |
+| Frontend | React + Tailwind (Lovable) |
+| Backend hosting | Render ($7/mo) |
+
+## Local setup
+
+```bash
+# Clone and setup
+git clone https://github.com/Mehdibargach/docuquery-ai.git
+cd docuquery-ai
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements-api.txt
+
+# Add API keys
+cp .env.example .env
+# Edit .env with your OPENAI_API_KEY and ANTHROPIC_API_KEY
+
+# Run
+uvicorn api:app --host 0.0.0.0 --port 8000
+```
+
+API endpoints:
+- `GET /health` — health check
+- `POST /upload` — upload a document (multipart/form-data)
+- `POST /query` — ask a question (`{"question": "..."}`)
+
+## Project structure
+
+```
+api.py              ← FastAPI backend (3 endpoints)
+app.py              ← Streamlit app (original prototype, still works)
+rag/
+  parser.py         ← File routing: TXT, PDF, CSV
+  chunker.py        ← 500-token chunks with page mapping
+  embedder.py       ← OpenAI embeddings
+  store.py          ← NumPy cosine similarity search
+  generator.py      ← Claude Sonnet answer generation with citations
+docs/
+  BUILD-WALKTHROUGH-*.md  ← Didactic walkthroughs for each scope
+  BUILD-LOG.md            ← Full build log with decisions
+  EVAL-REPORT.md          ← Evaluation results and methodology
+tests/
+  test_sample.pdf   ← 59-page test document
+  test_sample.csv   ← 25-row test dataset
+  test_doc.txt      ← Text test document
+```
+
+## Built by
+
+**Mehdi Bargach** — Senior Product Manager · 10+ years at Disney, TF1+, TotalEnergies
+
+[LinkedIn](https://www.linkedin.com/in/mehdibargach/)
