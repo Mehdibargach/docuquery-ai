@@ -4,7 +4,7 @@
 
 Upload a PDF, TXT, or CSV. Ask questions in natural language. Get answers grounded in your document with exact page and paragraph citations.
 
-**[Try it live](https://query-doc-master.lovable.app)** · [About & Metrics](https://query-doc-master.lovable.app/about)
+**[Try it live](https://docuqueryai.lovable.app)** · [About & Metrics](https://docuqueryai.lovable.app/about)
 
 ---
 
