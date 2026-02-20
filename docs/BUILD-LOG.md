@@ -288,6 +288,28 @@ Transformed DocuQuery AI from a local Streamlit prototype into a deployed, portf
 
 ---
 
+### Post-SHIP: LLM Switch — Claude Sonnet → GPT-4o-mini
+
+**Date:** 2026-02-19
+
+**Decision:** Switch answer generation from Claude Sonnet ($3/$15 per M tokens) to GPT-4o-mini ($0.15/$0.60 per M tokens). ~20x cost reduction.
+
+**Trigger:** API costs too high for a demo product that stays deployed. Cost optimization post-SHIP.
+
+**Changes:**
+- `rag/generator.py` — replaced `anthropic` client with `openai` client, changed API call format (messages.create → chat.completions.create)
+- `requirements-api.txt` — removed `anthropic` dependency (openai already present for embeddings)
+- `render.yaml` — removed ANTHROPIC_API_KEY env var
+- `CLAUDE.md`, `README.md`, `ARCHITECTURE.md` — updated LLM references
+
+**What stayed the same:** System prompt, chunk formatting, paragraph markers, citation format — zero changes to RAG pipeline or prompt engineering.
+
+**Bonus:** Single API provider now (OpenAI for both embeddings and generation) = one API key, simpler billing.
+
+**Note:** Eval metrics (87.5% accuracy, 0 hallucinations, 75% citations) were measured with Claude Sonnet. A re-eval with GPT-4o-mini would be needed to validate comparable quality, but not blocking for a demo product.
+
+---
+
 ## Running Notes
 
 - Started BUILD before FRAME — caught the mistake, went back. This is exactly what the method is designed to prevent.

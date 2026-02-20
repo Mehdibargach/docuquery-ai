@@ -4,7 +4,7 @@
 RAG-powered Q&A system. Upload documents, ask questions in natural language, get answers with exact citations.
 
 ## Architecture Decisions (from 1-Pager)
-- **LLM**: Claude Sonnet (Anthropic) — answer generation
+- **LLM**: GPT-4o-mini (OpenAI) — answer generation (~20x cheaper than Claude Sonnet)
 - **Embeddings**: text-embedding-3-small (OpenAI) — $0.02/1M tokens
 - **Vector Store**: numpy-based in-memory cosine similarity (replaced ChromaDB — SQLite issues on iCloud)
 - **Chunking**: 500 tokens, 100 token overlap

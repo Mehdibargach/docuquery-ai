@@ -46,7 +46,7 @@
          │
          ▼
 ┌─────────────────┐
-│  LLM Generator  │  ← Claude Sonnet
+│  LLM Generator  │  ← GPT-4o-mini
 └────────┬────────┘
          │
          ▼
@@ -88,7 +88,7 @@
 
 ### 4. Answer Generation
 
-**LLM**: Claude Sonnet
+**LLM**: GPT-4o-mini (OpenAI) — switched from Claude Sonnet for cost optimization (~20x cheaper)
 
 **Prompt Template**:
 ```
@@ -111,11 +111,11 @@ Answer:
 
 ## Tech Stack Rationale
 
-### Why Claude Sonnet only?
-- Better at following citation instructions
-- Stronger reasoning for complex queries
-- Lower cost per token
-- Single LLM = simpler billing and codebase
+### Why GPT-4o-mini?
+- ~20x cheaper than Claude Sonnet ($0.15/$0.60 vs $3/$15 per M tokens)
+- Good enough quality for document Q&A with structured prompts
+- Same provider as embeddings (OpenAI) = single API key, simpler billing
+- Originally Claude Sonnet — switched post-SHIP for cost optimization
 
 ### Why ChromaDB only?
 - Free, local, no account/API key needed

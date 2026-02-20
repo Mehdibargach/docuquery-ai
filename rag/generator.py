@@ -1,14 +1,14 @@
-import anthropic
+from openai import OpenAI
 
-MODEL = "claude-sonnet-4-20250514"
+MODEL = "gpt-4o-mini"
 
 _client = None
 
 
-def _get_client() -> anthropic.Anthropic:
+def _get_client() -> OpenAI:
     global _client
     if _client is None:
-        _client = anthropic.Anthropic()
+        _client = OpenAI()
     return _client
 
 
@@ -64,7 +64,7 @@ def _add_paragraph_markers(text: str) -> str:
 
 
 def generate_answer(question: str, search_results: dict) -> str:
-    """Generate an answer with citations using Claude Sonnet."""
+    """Generate an answer with citations using GPT-4o-mini."""
     documents = search_results["documents"][0]
     metadatas = search_results["metadatas"][0]
 
@@ -77,15 +77,15 @@ def generate_answer(question: str, search_results: dict) -> str:
     context = "\n\n".join(context_parts)
 
     client = _get_client()
-    response = client.messages.create(
+    response = client.chat.completions.create(
         model=MODEL,
         max_tokens=1024,
-        system=SYSTEM_PROMPT,
         messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
             {
                 "role": "user",
                 "content": f"Context:\n{context}\n\nQuestion: {question}",
-            }
+            },
         ],
     )
-    return response.content[0].text
+    return response.choices[0].message.content
