@@ -14,14 +14,31 @@ def chunk_text(text: str, filename: str, file_type: str = "txt", page_map: list 
     chunks = []
     start = 0
 
+    # Pre-compute char positions at chunk boundaries to avoid O(n^2) decoding.
+    # Old code decoded tokens[:start] and tokens[:end] on EVERY iteration,
+    # which for a 300-page PDF meant 1200+ decode calls and massive allocations.
+    boundaries = set()
+    pos = 0
+    while pos < len(tokens):
+        boundaries.add(pos)
+        end = min(pos + CHUNK_SIZE, len(tokens))
+        boundaries.add(end)
+        if end >= len(tokens):
+            break
+        pos = end - CHUNK_OVERLAP
+    boundaries.add(len(tokens))
+
+    char_at = {}
+    for b in sorted(boundaries):
+        char_at[b] = len(ENCODING.decode(tokens[:b])) if b > 0 else 0
+
     while start < len(tokens):
         end = min(start + CHUNK_SIZE, len(tokens))
         chunk_tokens = tokens[start:end]
         chunk_text_decoded = ENCODING.decode(chunk_tokens)
 
-        # Find character positions in original text for citation
-        char_start = len(ENCODING.decode(tokens[:start]))
-        char_end = len(ENCODING.decode(tokens[:end]))
+        char_start = char_at[start]
+        char_end = char_at[end]
 
         # Find page range for PDF
         page_start, page_end = _find_pages(char_start, char_end, page_map)

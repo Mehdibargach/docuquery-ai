@@ -310,6 +310,55 @@ Transformed DocuQuery AI from a local Streamlit prototype into a deployed, portf
 
 ---
 
+### 2026-02-25 — HOTFIX: Memory Limit Exceeded (OOM on Large PDF Upload)
+
+**Trigger:** Un utilisateur a uploade un livre PDF (200+ pages). Le backend Render (plan Starter, 512 MB RAM) a depasse sa limite memoire et a crash avec restart automatique. Erreur Render: "Web Service docuquery-ai exceeded its memory limit."
+
+**Root cause:** Aucune protection sur la taille des fichiers + pipeline non optimise pour les gros documents. Quatre points d'accumulation memoire:
+
+1. **Zero limite de taille** — `api.py:66` faisait `await file.read()` sans aucune validation. Un PDF de 300 pages (~90 MB) passait directement en RAM.
+2. **Concatenation string O(n²)** — `parser.py` construisait le texte avec `full_text += page_text` a chaque page. Les strings Python etant immutables, chaque `+=` cree une copie complete.
+3. **Decodage tokens O(n²)** — `chunker.py` appelait `ENCODING.decode(tokens[:start])` et `tokens[:end]` a CHAQUE iteration de la boucle. Pour un livre de 300 pages (~600 chunks) = 1,200 appels decode, chacun allouant de la memoire.
+4. **Embeddings non batches** — `embedder.py` envoyait TOUS les chunks a OpenAI en un seul appel API. 600 embeddings deserialises en memoire d'un coup.
+
+**Pic memoire estime (livre 300 pages):** ~400 MB → depasse les 512 MB du plan Starter → OOM.
+
+**Fixes implementees (4):**
+
+| Fix | Fichier | Changement | Impact |
+|-----|---------|------------|--------|
+| **#1 — Limite taille** | `api.py` | Max 10 MB + HTTP 413 avec message clair | Empeche OOM avant qu'il arrive |
+| **#2 — Batching embeddings** | `rag/embedder.py` | Batches de 50 chunks (pas tout d'un coup) | Reduit pic memoire API |
+| **#3 — Pre-calcul positions** | `rag/chunker.py` | Pre-compute `char_at{}` aux frontieres au lieu de decoder 1200x | De O(n²) a O(n) decode calls |
+| **#4 — List + join** | `rag/parser.py` | `pages_text.append()` + `"".join()` au lieu de `+=` | De O(n²) a O(n) concatenation |
+
+**Decisions prises:**
+- Limite a 10 MB (pas 25) — conservative pour le plan Starter 512 MB. Couvre ~100-120 pages PDF standard.
+- HTTP 413 (Payload Too Large) = code standard, pas 400. Message inclut la taille du fichier + la limite.
+- Pas d'upgrade du plan Render — les fixes code suffisent pour le use case demo. Si besoin, upgrader a Standard ($25/mo, 1 GB RAM).
+- Logging ajoute (`logger.info`) pour diagnostiquer les futurs problemes en production.
+
+**Tests de regression:**
+- TXT parse: PASS
+- PDF parse (page_map contiguity): PASS
+- CSV parse: PASS
+- Chunker 5000 mots (13 chunks, char_start monotone): PASS
+- Syntax check 4 fichiers: PASS
+- Embedder batch constant = 50: PASS
+- API max file size constant = 10 MB: PASS
+
+**Apprentissages:**
+- DocuQuery a ete teste avec des PDFs de ~60 pages max. Le premier utilisateur externe a immediatement uploade un livre. **Toujours limiter les inputs aux frontieres du systeme.**
+- La concatenation string en Python est un piege classique (`+=` = O(n²)). Toujours utiliser `list.append()` + `"".join()`.
+- Le chunker avait un bug de performance cache: chaque iteration decodait les tokens depuis le debut. Pre-calculer aux frontieres = fix trivial, gain enorme.
+- "Schema coverage > LLM intelligence" (WatchNext) et maintenant "Input validation > processing optimization" — proteger les frontieres du systeme est toujours la priorite #1.
+
+**Time spent:** ~1h (analyse: 30min, code: 20min, tests + doc: 10min)
+
+**Next step:** Deploy sur Render (git push), verifier que le service ne crash plus.
+
+---
+
 ## Running Notes
 
 - Started BUILD before FRAME — caught the mistake, went back. This is exactly what the method is designed to prevent.

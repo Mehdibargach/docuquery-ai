@@ -14,6 +14,11 @@ RAG-powered Q&A system. Upload documents, ask questions in natural language, get
 ## Current Phase
 SHIP — Scope 3 complete (FastAPI + Render + Lovable). 26/26 micro-tests PASS. Product deployed and demo-ready.
 
+## Production Limits
+- **Max file size:** 10 MB (enforced in `api.py`, HTTP 413 if exceeded)
+- **Render plan:** Starter ($7/mo, 512 MB RAM) — handles PDFs up to ~120 pages
+- **Embedding batching:** 50 chunks per API call (`rag/embedder.py`)
+
 ## Live URLs
 - **App**: https://docuqueryai.lovable.app (React/Tailwind, dark-first)
 - **Backend**: https://docuquery-ai-5rfb.onrender.com (FastAPI, Render Starter $7/mo)
@@ -36,14 +41,17 @@ Aucun commit tant que le micro-test n'est pas PASS.
 Si le gameplan dit "50-page PDF", c'est 50 pages. Pas de raccourci sur la taille/réalisme des données de test.
 
 ### 3. Checklist qualité walkthrough
+**Audience cible : non-technique** (quelqu'un qui n'a jamais codé). Benchmark : "est-ce que ma femme comprendrait ce paragraphe ?"
+
 Chaque BUILD-WALKTHROUGH doit vérifier TOUS ces critères :
-- [ ] Chaque concept nouveau expliqué depuis zéro
-- [ ] Code annoté ligne par ligne (pas en blocs)
-- [ ] Au moins 3 analogies accessibles pour non-tech
-- [ ] Section "What went wrong" (même si rien n'a cassé)
-- [ ] Section "Micro-test results" avec tableau PASS/FAIL
-- [ ] Diagramme d'architecture complet mis à jour
-- [ ] "Why not" explicite pour chaque alternative rejetée
+- [ ] Analogie du quotidien AVANT chaque concept technique
+- [ ] Zero jargon sans explication préalable
+- [ ] Ton conversationnel (comme si tu expliquais à un ami)
+- [ ] Section "Ce qui a merdé" narrative avec apprentissage
+- [ ] Section "Résultats des tests" avec tableau PASS/FAIL
+- [ ] Diagramme d'architecture ASCII
+- [ ] Décisions "why / why not" explicites
+- [ ] Version française + traduction anglaise
 
 ### 4. Pas de mode batch
 Exécution séquentielle avec validation à chaque phase (code prêt → micro-test passé → doc écrite). Ne pas tout livrer d'un coup.

@@ -54,18 +54,22 @@ def _parse_pdf(uploaded_file, filename: str) -> ParseResult:
     uploaded_file.seek(0)
     pdf_bytes = io.BytesIO(uploaded_file.read())
 
-    full_text = ""
+    pages_text: list[str] = []
     page_map = []  # (page_number, char_start, char_end)
+    char_count = 0
 
     with pdfplumber.open(pdf_bytes) as pdf:
         for i, page in enumerate(pdf.pages):
             page_text = page.extract_text() or ""
             if page_text and not page_text.endswith("\n"):
                 page_text += "\n"
-            char_start = len(full_text)
-            full_text += page_text
-            char_end = len(full_text)
-            page_map.append((i + 1, char_start, char_end))  # 1-indexed page numbers
+            char_start = char_count
+            pages_text.append(page_text)
+            char_count += len(page_text)
+            page_map.append((i + 1, char_start, char_count))  # 1-indexed page numbers
+
+    # Single join at the end — avoids O(n^2) string concatenation
+    full_text = "".join(pages_text)
 
     if len(full_text.strip()) < 100:
         # Warning: likely a scanned/image-based PDF

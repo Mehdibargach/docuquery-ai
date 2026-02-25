@@ -1,6 +1,7 @@
 """FastAPI backend for DocuQuery AI — exposes RAG pipeline via REST endpoints."""
 
 import io
+import logging
 import time
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
@@ -15,6 +16,11 @@ from rag.store import add_chunks, query, clear
 from rag.generator import generate_answer
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
+
+MAX_FILE_SIZE_MB = 10
+MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
 app = FastAPI(title="DocuQuery AI", version="1.0.0")
 
@@ -63,7 +69,15 @@ def health():
 
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
+    # Read file with size limit to prevent memory exhaustion
     content = await file.read()
+    if len(content) > MAX_FILE_SIZE_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File too large ({len(content) / 1024 / 1024:.1f} MB). Maximum allowed: {MAX_FILE_SIZE_MB} MB.",
+        )
+
+    logger.info("Upload: %s (%.1f KB)", file.filename, len(content) / 1024)
     adapted = _UploadFileAdapter(file.filename, content)
 
     result = parse_file(adapted)
@@ -91,6 +105,8 @@ async def upload(file: UploadFile = File(...)):
     chunk_texts = [c["text"] for c in chunks]
     embeddings = embed_texts(chunk_texts)
     add_chunks(chunks, embeddings)
+
+    logger.info("Ready: %d chunks, %d embeddings", len(chunks), len(embeddings))
 
     return {
         "filename": result.filename,

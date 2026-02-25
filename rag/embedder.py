@@ -12,14 +12,24 @@ def _get_client() -> OpenAI:
     return _client
 
 
+BATCH_SIZE = 50
+
+
 def embed_texts(texts: list[str]) -> list[list[float]]:
     """Embed a list of texts using OpenAI text-embedding-3-small.
 
+    Processes in batches of 50 to avoid memory spikes on large documents.
     Returns a list of embedding vectors.
     """
     client = _get_client()
-    response = client.embeddings.create(model=MODEL, input=texts)
-    return [item.embedding for item in response.data]
+    all_embeddings = []
+
+    for i in range(0, len(texts), BATCH_SIZE):
+        batch = texts[i : i + BATCH_SIZE]
+        response = client.embeddings.create(model=MODEL, input=batch)
+        all_embeddings.extend(item.embedding for item in response.data)
+
+    return all_embeddings
 
 
 def embed_query(query: str) -> list[float]:
