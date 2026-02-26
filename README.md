@@ -89,6 +89,6 @@ tests/
 
 ## Built by
 
-**Mehdi Bargach** — Senior Product Manager · 10+ years at Disney, TF1+, TotalEnergies
+**Mehdi Bargach** — Sr. Product Manager | AI & Data
 
 [LinkedIn](https://www.linkedin.com/in/mehdi-bargach/)
