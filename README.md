@@ -91,4 +91,4 @@ tests/
 
 **Mehdi Bargach** — Senior Product Manager · 10+ years at Disney, TF1+, TotalEnergies
 
-[LinkedIn](https://www.linkedin.com/in/mehdibargach/)
+[LinkedIn](https://www.linkedin.com/in/mehdi-bargach/)
