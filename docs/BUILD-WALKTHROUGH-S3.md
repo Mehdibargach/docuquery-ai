@@ -33,6 +33,8 @@ This is the biggest architectural decision since replacing ChromaDB with NumPy i
 | Polish Streamlit | Zero new code. Themes, custom CSS. | Still looks like Streamlit. Limited layout control. Can't deploy easily. No dark mode. LaTeX `$` rendering bug from EVALUATE persists. |
 | FastAPI + React (Lovable) | Modern SaaS aesthetic. Full layout control. Deployable. Portfolio-grade. LaTeX bug eliminated (React renders markdown differently). | Two codebases. New deployment infra. CORS configuration. |
 
+For hiring managers reviewing your portfolio, Streamlit signals "quick prototype." FastAPI + React signals "production-grade product." The $7/month hosting cost is the price of that signal — cheap for what it communicates about your capabilities. A hiring manager doesn't evaluate your RAG pipeline. They evaluate what they see in the first 3 seconds.
+
 The decision was clear: a portfolio piece needs to look like a product, not a prototype.
 
 ### The Split
@@ -114,6 +116,8 @@ class _UploadFileAdapter:
 # Does: embed query → search → generate
 # Returns: {"answer", "latency", "sources": [{chunk_index, page_start, ...}]}
 ```
+
+Why separate upload and query into different endpoints instead of a single one? Because they happen at different moments with different expectations. Upload means "show me progress over a few seconds" — the user waits while 48 chunks get embedded. Query means "give me an answer fast" — the user expects a response in under 10 seconds. Separating them lets us optimize each experience independently: the upload endpoint can return chunk counts for a progress stepper, while the query endpoint can return latency metrics alongside the answer.
 
 The `/query` endpoint returns structured source data (chunk index, pages, text preview) instead of the raw debug dump that Streamlit showed. This lets the frontend display citation cards properly.
 
@@ -314,13 +318,13 @@ Key sections:
 
 ### Problem 1: CORS Domain Mismatch
 
-**What happened:** Lovable's editor uses `*.lovableproject.com` but we only whitelisted `*.lovable.app`.
+**What happened:** We tested the backend with curl (which ignores CORS) and thought everything was working. All endpoints returned correct data. Then the Lovable frontend failed with "Unable to reach the server." The console revealed the real issue: the request came from `*.lovableproject.com`, but we'd only whitelisted `*.lovable.app`.
 
-**Root cause:** Assumed one domain. Lovable uses two: `lovableproject.com` (editor preview) and `lovable.app` (published).
+**Root cause:** We assumed Lovable used one domain. It uses two: `lovableproject.com` (editor preview) and `lovable.app` (published). Our CORS config only allowed the second.
 
 **Fix:** Regex pattern `r"https://.*\.(lovableproject\.com|lovable\.app)"` covering both domains.
 
-**Lesson:** CORS errors look like network failures in the browser. Always check the console for the actual origin domain. And never test CORS with curl alone — curl doesn't enforce CORS.
+**The real lesson:** Never test cross-origin scenarios with curl alone. curl bypasses CORS entirely — it's a browser-only security feature. Even if the backend works perfectly in isolation, the frontend might fail due to deployment details you didn't anticipate. Always test from the actual client domain. The 30 minutes we spent debugging "the backend is broken" would have been 2 minutes if we'd tested from the Lovable editor first.
 
 ### Problem 2: Lovable Mock Mode
 

@@ -242,6 +242,8 @@ Overlap solves this. With 100-token overlap, the end of chunk 1 and the beginnin
 
 ### Why tiktoken (not word counting)
 
+We need to count text in "tokens" rather than words because the AI model works with tokens internally. If we counted words instead, our text chunks would be the wrong size — like cutting a pizza into slices that are too big for the box. The box is the model's processing unit, and tokens are the slices that fit.
+
 A "token" is not a word. AI models don't read words the way humans do — they break text into smaller units called **tokens**. A token can be a whole word ("hello"), part of a word ("un" + "happiness"), or even a punctuation mark. The word "unhappiness" is 1 word but 3 tokens.
 
 A **tokenizer** is the tool that splits text into these tokens. Different AI models use different tokenizers, which means the same text can produce different token counts depending on the model.
@@ -335,6 +337,8 @@ Notice the overlap: chunk 0 ends at 2,384, chunk 1 starts at 1,964. Those 420 ch
 Converts text into a list of 1,536 numbers (a "vector"). Texts with similar meaning get similar vectors.
 
 ### What is an embedding?
+
+To find text passages with similar meaning, we need a way to compare "meaning" numerically — without just matching keywords. That's what embeddings do: they convert text into a list of numbers that captures its meaning. Texts about the same topic get similar numbers. This is the core trick that makes the whole system work.
 
 Think of it as GPS coordinates for meaning. Paris and Lyon are geographically close, so their coordinates are similar. Similarly, "The dog ran in the park" and "A canine was jogging in the garden" are semantically close, so their embeddings are similar — even though they share almost no words.
 
@@ -776,52 +780,54 @@ After running these three commands, our 6 dependencies (Streamlit, anthropic, op
 
 ## 11. What went wrong
 
+Building software never goes exactly as planned. This section tells the story of the five things that broke during the Walking Skeleton build — each one a learning moment that shaped how we approach the rest of the project.
+
 ### Problem 1: Python 3.14 incompatibility
 
-**What happened:** The system had Python 3.14 (bleeding edge). When installing dependencies, `tiktoken` failed to build because it requires a Rust compiler for source compilation, and no pre-built wheel (binary) exists for Python 3.14.
+The very first thing we tried — installing dependencies — failed. The system had Python 3.14 (the bleeding edge release). When installing `tiktoken`, the process crashed because tiktoken requires a Rust compiler for source compilation, and no pre-built binary exists for Python 3.14. We hadn't even written a line of code yet, and the project was already stuck.
 
-**How we fixed it:** Used Python 3.11 (also installed via Homebrew) to create the virtual environment. Python 3.11 has pre-built tiktoken wheels, so installation works without a Rust compiler.
+The fix was straightforward: we used Python 3.11 (also installed via Homebrew) to create the virtual environment instead. Python 3.11 has pre-built tiktoken binaries, so installation works without needing a Rust compiler.
 
-**Lesson:** For AI/ML projects, use a stable Python version (3.11 or 3.12), not the latest. The ecosystem of libraries needs time to support new Python releases.
+**The takeaway:** For AI/ML projects, use a stable Python version (3.11 or 3.12), not the latest. The ecosystem of libraries needs time to catch up with new Python releases. We lost 20 minutes figuring this out — time we could have saved by starting with a proven version.
 
 ### Problem 2: Anthropic's servers were temporarily full (Error 529)
 
-**What happened:** When you use Claude, your code sends a request over the internet to Anthropic's servers, which run the AI model and send back a response. These servers have a limited capacity — like a restaurant with a finite number of tables. When too many people send requests at the same time, the servers can't handle them all.
+This one hit us mid-micro-test, when everything seemed to be working. When you use Claude, your code sends a request over the internet to Anthropic's servers, which run the AI model and send back a response. These servers have a limited capacity — like a restaurant with a finite number of tables. When too many people send requests at the same time, the servers can't handle them all.
 
-During our micro-test, we sent 5 questions in rapid succession. The first question went through fine. But on the second question, Anthropic's servers responded with **error 529 — "Overloaded"**, meaning: "We're full right now, try again later."
+During our micro-test, we sent 5 questions in rapid succession. The first question went through fine. But on the second question, Anthropic's servers responded with **error 529 — "Overloaded"**, meaning: "We're full right now, try again later." Suddenly, what looked like a pipeline bug was actually a traffic jam on someone else's infrastructure.
 
-**How we fixed it:** We added a 3-second pause between each question, giving the servers time to process each request before sending the next one. With this delay, all 5 questions succeeded.
+We added a 3-second pause between each question, giving the servers time to process each request before sending the next one. With this delay, all 5 questions succeeded.
 
-**Lesson:** AI services are shared infrastructure — millions of people use them simultaneously. When making multiple requests in a row, space them out. In a production application, you'd implement automatic retry logic (if a request fails, wait and try again). For a Walking Skeleton, a simple 3-second pause is enough.
+**The takeaway:** AI services are shared infrastructure — millions of people use them simultaneously. When making multiple requests in a row, space them out. In a production application, you'd implement automatic retry logic (if a request fails, wait and try again). For a Walking Skeleton, a simple 3-second pause is enough. But the deeper lesson is this: when your code depends on external services, your code is only as reliable as those services.
 
 ### Problem 3: ChromaDB usage tracking warnings (before replacement)
 
-**What happened:** Many software libraries collect anonymous usage data — things like "how many times was this feature used" or "which version is running." This is called **telemetry**: the library quietly sends statistics to its creators so they can improve the product. It's similar to when your phone asks "share usage data with Apple?"
+This one seemed harmless at first. Many software libraries collect anonymous usage data — things like "how many times was this feature used" or "which version is running." This is called **telemetry**: the library quietly sends statistics to its creators so they can improve the product. It's similar to when your phone asks "share usage data with Apple?"
 
 ChromaDB tried to send this kind of data when it ran. In our case, it failed to do so (due to a minor bug in the telemetry code) and printed a warning message in the terminal: "Failed to send telemetry event."
 
-**How we fixed it:** We ignored it — this was cosmetic. But it was a sign of deeper issues to come (see Problem 5).
+We shrugged it off — cosmetic, we thought. But in hindsight, this was the first hint that ChromaDB had rough edges in our environment. The warnings were small cracks in the foundation that foreshadowed the collapse in Problem 5.
 
 ### Problem 4: "n_results > number of elements" (before replacement)
 
-**What happened:** We asked for top 5 results, but the test document only produced 3 chunks. ChromaDB warned: "Number of requested results 5 is greater than number of elements in index 3, updating n_results = 3."
+We asked for top 5 results, but the test document only produced 3 chunks. ChromaDB warned: "Number of requested results 5 is greater than number of elements in index 3, updating n_results = 3."
 
-**How we fixed it:** This is expected behavior — ChromaDB automatically adjusted. With a real 50+ page document, there would be many more chunks than 5. Not a problem. (Our numpy replacement handles this with `min(n_results, len(_chunks))`.)
+This was expected behavior — ChromaDB automatically adjusted. With a real 50+ page document, there would be many more chunks than 5. Not a real problem, but another small signal that ChromaDB was chatty about edge cases. (Our eventual numpy replacement handles this cleanly with `min(n_results, len(_chunks))`.)
 
 ### Problem 5: ChromaDB SQLite failure — the big one
 
-**What happened:** When we tried to run the full micro-test on the 10-page document, ChromaDB crashed with a critical error: `sqlite3.OperationalError: no such table: collections`. This error means ChromaDB's internal SQLite database (which tracks its collections) failed to initialize properly.
+This was the moment the Walking Skeleton almost stalled. When we tried to run the full micro-test on the 10-page document, ChromaDB crashed hard: `sqlite3.OperationalError: no such table: collections`. ChromaDB's internal database failed to initialize.
 
-**Root cause:** ChromaDB 0.6.3 uses SQLite under the hood — a lightweight database that stores data in a single file. The project lives in an **iCloud-synced directory** (`~/Library/Mobile Documents/com~apple~CloudDocs/`). iCloud's sync mechanism interferes with SQLite's file locking, preventing ChromaDB from creating its internal tables.
+**Why it happened:** ChromaDB 0.6.3 uses SQLite under the hood — a lightweight database that stores data in a single file. Our project lives in an **iCloud-synced directory** (`~/Library/Mobile Documents/com~apple~CloudDocs/`). iCloud's sync mechanism interferes with SQLite's file locking, preventing ChromaDB from creating its internal tables. The telemetry warnings from Problem 3 suddenly made more sense — ChromaDB was struggling with our environment from the start.
 
-**What we tried (5 attempts, all failed):**
+**The frustrating part:** We tried five different fixes, each one escalating in complexity, and each one failing the same way:
 1. Changed `except ValueError` to `except Exception` in the `clear()` function — didn't help (the error was in initialization, not cleanup)
 2. Switched from `chromadb.Client()` to `chromadb.EphemeralClient()` — same error
 3. Added explicit `Settings(persist_directory="/tmp/...", is_persistent=False)` — same error
 4. Launched Streamlit from `/tmp/` instead of the iCloud path — same error (ChromaDB still tried to write SQLite files)
 5. Various combinations of the above — none worked
 
-**The fix:** We replaced ChromaDB entirely. Instead of debugging a third-party library's internal SQLite behavior, we wrote a **50-line numpy-based vector store** that does exactly the same thing:
+After an hour of debugging someone else's library, we stepped back and asked a different question: "Do we actually need ChromaDB?" The answer was no. We replaced ChromaDB entirely with a **50-line numpy-based vector store** that does exactly the same thing:
 - `add_chunks()` stores vectors as a numpy array
 - `query()` computes cosine similarity and returns top K results
 - `clear()` resets the data
@@ -831,7 +837,7 @@ ChromaDB tried to send this kind of data when it ran. In our case, it failed to 
 
 This is a textbook example of **pragmatic simplification** in a Walking Skeleton. The goal isn't to use the most sophisticated tool — it's to test the Riskiest Assumption as fast as possible. ChromaDB brings features we don't need (persistence, indexing, multi-collection management, HNSW algorithm) along with dependencies that can break (SQLite, specific OS behaviors). 50 lines of numpy gives us exactly what we need: store vectors, compute similarity, return results.
 
-**Lesson:** In a Walking Skeleton, complexity is your enemy. If a library fights you, ask: "Do I actually need what this library provides, or can I write the core logic myself?" For vector search on a small dataset (< 10,000 vectors), raw numpy is fast enough and infinitely simpler. Upgrade to a proper vector database when (and only when) the scale demands it.
+**The takeaway:** In a Walking Skeleton, complexity is your enemy. If a library fights you, stop debugging and ask: "Do I actually need what this library provides, or can I write the core logic myself?" For vector search on a small dataset (< 10,000 vectors), raw numpy is fast enough and infinitely simpler. The hour we spent debugging ChromaDB taught us more about our architecture than the hour we spent building the numpy replacement — but only one of those hours produced working code.
 
 ---
 

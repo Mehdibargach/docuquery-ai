@@ -133,12 +133,15 @@ We don't change how chunks are stored, embedded, or retrieved. Paragraph markers
 
 Why at generation time and not in storage?
 
+If we stored the markers in the text, the embedding model would see "[P1]" as content. When searching for relevant passages, it might confuse the marker with actual content, leading to worse search results. By adding markers only when we send text to the LLM for answer generation, we keep the stored text clean — the search engine sees pure content, and the answer generator sees labeled paragraphs.
+
+Here's the difference concretely:
+
 ```
 If markers were in the stored text:
   "text": "[P1] Phase 3 — Design Partner..."
   → The embedding model sees "[P1]" as a real token
-  → Pollutes the embedding space with meaningless markers
-  → Retrieval quality could degrade
+  → Search quality could degrade (markers pollute the meaning vectors)
 
 If markers are added at generation time:
   Stored: "Phase 3 — Design Partner..."
@@ -330,6 +333,8 @@ Layer 3: app.py → "if result is None" → st.error()
 
 **Analogy:** A building has a locked front door (Layer 1), a security guard at reception (Layer 2), and a badge reader at the office door (Layer 3). You don't skip the security guard because the front door is locked.
 
+We check the file type in three different places, so if one check fails, the other two still protect us. This teaches an important principle: multiple validation layers don't require testing each layer independently if one layer is the primary guard and the others are fail-safes. In our case, Layer 1 (Streamlit's UI filter) is the primary guard that users interact with. Layers 2 and 3 exist for programmatic callers or future UI changes — they're insurance, not the main defense.
+
 ---
 
 ## 7. Slice 4: Refusal Quality — Test First, Code Only If Needed
@@ -383,13 +388,13 @@ After the fix, the LLM says:
 
 ### Problem 2: S2-6 Not Directly Testable
 
-**What happened:** Streamlit's `file_uploader` restricts file types at the UI level. You can't upload a `.docx` to test the parser validation — the UI blocks it before the code runs.
+**What happened:** We wrote validation code for unsupported file types (the parser returns `None` for `.docx`), then realized we couldn't actually test it. Streamlit's `file_uploader` restricts file types at the UI level — the `type=["txt", "pdf", "csv"]` parameter creates a client-side filter. You can't upload a `.docx` to test the parser validation because the UI blocks it before the code even runs.
 
-**Root cause:** The `type=["txt", "pdf", "csv"]` parameter creates a client-side filter that we can't bypass without modifying the code temporarily.
+This was frustrating. We'd written defensive code, committed it, and then couldn't prove it worked through normal user interaction. The temptation was to temporarily remove the UI filter to test the parser layer — but that would mean modifying production code just for a test, then reverting. That's the kind of hack that introduces bugs.
 
-**Decision:** Accepted as PASS by design. The parser validation exists as defense-in-depth for programmatic callers or future UI changes. The UI filter is the primary guard.
+**Decision:** We accepted S2-6 as PASS by design. The parser validation exists as defense-in-depth for programmatic callers (like the FastAPI endpoint we'd build in Scope 3) or future UI changes. The UI filter is the primary guard.
 
-**Lesson:** When testing defense-in-depth, sometimes the outer layer makes inner layers untestable through normal UI flows. Document the gap, don't force artificial test scenarios.
+**The real lesson:** When you build multiple safety layers, the outermost layer sometimes makes inner layers untestable through normal user flows. That's not a flaw — it's actually working as intended. The outer layer is doing its job so well that the inner layers never get exercised. Document the gap honestly. Don't force artificial test scenarios that require modifying the code you're trying to validate.
 
 ---
 

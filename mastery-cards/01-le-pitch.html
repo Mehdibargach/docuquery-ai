@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DocuQuery AI — Product Mastery Card</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f5f5f7; --bg-card: #ffffff; --bg-subtle: #f0f0f2; --bg-hover: #fafafa;
+    --border: #e0e0e4; --border-light: #ebebee;
+    --text: #1d1d1f; --text-secondary: #515154; --text-muted: #86868b;
+    --accent: #1d1d1f; --accent-bg: #f0f0f2; --accent-border: #d2d2d7;
+    --callout-bg: #f5f5f7; --callout-border: #d2d2d7; --callout-text: #1d1d1f; --callout-muted: #515154;
+    --header-bg: #1d1d1f; --header-text: #f5f5f7;
+    --pitch-bg: #1d1d1f; --pitch-text: #e8e8ed; --pitch-accent: #a1a1a6;
+    --badge-blocking-bg: #1d1d1f; --badge-blocking-text: #ffffff;
+    --badge-quality-bg: #515154; --badge-quality-text: #ffffff;
+    --badge-signal-bg: #86868b; --badge-signal-text: #ffffff;
+    --step-number-bg: #1d1d1f; --step-number-text: #ffffff;
+    --step-box-bg: #1d1d1f; --step-box-text: #ffffff;
+    --toggle-bg: rgba(0,0,0,0.06); --toggle-hover: rgba(0,0,0,0.1);
+    --code-bg: #e8e8ed;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0a0a0a; --bg-card: #141414; --bg-subtle: #1c1c1e; --bg-hover: #1c1c1e;
+    --border: #2c2c2e; --border-light: #232326;
+    --text: #f5f5f7; --text-secondary: #a1a1a6; --text-muted: #6e6e73;
+    --accent: #f5f5f7; --accent-bg: #1c1c1e; --accent-border: #3a3a3c;
+    --callout-bg: #1c1c1e; --callout-border: #2c2c2e; --callout-text: #f5f5f7; --callout-muted: #a1a1a6;
+    --header-bg: #141414; --header-text: #f5f5f7;
+    --pitch-bg: #1c1c1e; --pitch-text: #d1d1d6; --pitch-accent: #86868b;
+    --badge-blocking-bg: #f5f5f7; --badge-blocking-text: #0a0a0a;
+    --badge-quality-bg: #a1a1a6; --badge-quality-text: #0a0a0a;
+    --badge-signal-bg: #6e6e73; --badge-signal-text: #0a0a0a;
+    --step-number-bg: #f5f5f7; --step-number-text: #0a0a0a;
+    --step-box-bg: #f5f5f7; --step-box-text: #0a0a0a;
+    --toggle-bg: rgba(255,255,255,0.08); --toggle-hover: rgba(255,255,255,0.14);
+    --code-bg: #2c2c2e;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text); background: var(--bg); line-height: 1.65; font-size: 15px;
+    padding: 40px 20px; transition: background 0.3s, color 0.3s; -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  /* TOGGLE */
+  .theme-toggle {
+    position: fixed; top: 20px; right: 24px; z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--toggle-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px;
+    cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text-secondary); transition: background 0.2s;
+  }
+  .theme-toggle:hover { background: var(--toggle-hover); }
+  .theme-toggle .icon { font-size: 15px; line-height: 1; }
+
+  /* HEADER */
+  .header {
+    background: var(--header-bg); color: var(--header-text);
+    padding: 40px 44px; border-radius: 14px; margin-bottom: 28px; border: 1px solid var(--border);
+  }
+  .header-badge {
+    display: inline-block; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+    font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 16px; margin-bottom: 14px;
+  }
+  [data-theme="dark"] .header-badge { background: rgba(255,255,255,0.06); }
+  .header h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.5px; }
+  .header-subtitle { font-size: 15px; color: rgba(255,255,255,0.5); font-weight: 400; }
+
+  /* SECTION */
+  .section {
+    background: var(--bg-card); border-radius: 12px; padding: 32px 36px;
+    margin-bottom: 20px; border: 1px solid var(--border); transition: background 0.3s, border-color 0.3s;
+  }
+  .section-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; background: var(--step-number-bg); color: var(--step-number-text);
+    font-size: 13px; font-weight: 700; border-radius: 7px; margin-bottom: 12px; transition: background 0.3s, color 0.3s;
+  }
+  .section h2 { font-size: 21px; font-weight: 700; color: var(--text); margin-bottom: 18px; letter-spacing: -0.3px; }
+  .section p { margin-bottom: 14px; color: var(--text-secondary); }
+
+  /* ONE-LINER */
+  .one-liner {
+    background: var(--accent-bg); border-left: 3px solid var(--accent);
+    padding: 22px 26px; border-radius: 0 10px 10px 0; margin-bottom: 20px; transition: background 0.3s, border-color 0.3s;
+  }
+  .one-liner p { font-size: 17px; font-weight: 500; color: var(--text); margin: 0; line-height: 1.5; }
+
+  /* TABLES */
+  table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    margin: 14px 0; font-size: 14px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
+  }
+  thead th {
+    background: var(--bg-subtle); color: var(--text-muted); font-weight: 600; text-align: left;
+    padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
+  }
+  tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); vertical-align: top; color: var(--text-secondary); }
+  tbody tr:last-child td { border-bottom: none; }
+  .problem-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; width: 160px; }
+
+  /* PIPELINE */
+  .pipeline-flow { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 26px 0; flex-wrap: wrap; }
+  .pipeline-step { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .pipeline-step .step-box {
+    background: var(--step-box-bg); color: var(--step-box-text);
+    font-weight: 700; font-size: 13px; padding: 10px 20px; border-radius: 8px; letter-spacing: 0.5px; transition: background 0.3s, color 0.3s;
+  }
+  .pipeline-step .step-label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+  .pipeline-arrow { color: var(--text-muted); font-size: 18px; margin-top: -16px; }
+
+  /* STEP DETAIL */
+  .step-detail { border: 1px solid var(--border); border-radius: 10px; margin: 18px 0; overflow: hidden; transition: border-color 0.3s; }
+  .step-detail-header {
+    display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+    background: var(--bg-subtle); border-bottom: 1px solid var(--border); transition: background 0.3s;
+  }
+  .step-detail-number {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; background: var(--step-number-bg); color: var(--step-number-text);
+    font-size: 12px; font-weight: 700; border-radius: 6px; flex-shrink: 0; transition: background 0.3s, color 0.3s;
+  }
+  .step-detail-title { font-weight: 700; font-size: 14px; color: var(--text); }
+  .step-detail-title span { font-weight: 400; color: var(--text-muted); margin-left: 6px; }
+  .step-detail-body { padding: 18px; }
+  .step-detail-body .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .col-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: var(--text-muted); }
+  .col-what p, .col-why p { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
+
+  /* CALLOUTS */
+  .callout, .deep-dive, .key-insight {
+    background: var(--callout-bg); border: 1px solid var(--callout-border);
+    border-radius: 8px; padding: 16px 18px; margin: 14px 0; transition: background 0.3s, border-color 0.3s;
+  }
+  .callout-title, .deep-dive-title {
+    font-size: 12px; font-weight: 700; color: var(--text-muted);
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.6px;
+  }
+  .callout p, .deep-dive p, .key-insight p { font-size: 14px; color: var(--callout-muted); margin-bottom: 8px; }
+  .callout p:last-child, .deep-dive p:last-child, .key-insight p:last-child { margin-bottom: 0; }
+  .key-insight { border-left: 3px solid var(--text-muted); border-radius: 0 8px 8px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; transition: background 0.3s; }
+
+  /* METRICS */
+  .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 18px 0; }
+  .metric-card {
+    border-radius: 10px; padding: 18px; text-align: center;
+    border: 1px solid var(--border); background: var(--bg-subtle); transition: background 0.3s, border-color 0.3s;
+  }
+  .metric-badge {
+    display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 10px; margin-bottom: 10px;
+  }
+  .blocking .metric-badge { background: var(--badge-blocking-bg); color: var(--badge-blocking-text); }
+  .quality .metric-badge { background: var(--badge-quality-bg); color: var(--badge-quality-text); }
+  .signal .metric-badge { background: var(--badge-signal-bg); color: var(--badge-signal-text); }
+  .metric-value { font-size: 30px; font-weight: 800; letter-spacing: -1px; margin-bottom: 4px; color: var(--text); }
+  .metric-label { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .metric-desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
+
+  .severity-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; letter-spacing: 0.5px; }
+  .severity-tag.blocking { background: var(--badge-blocking-bg); color: var(--badge-blocking-text); }
+  .severity-tag.quality { background: var(--badge-quality-bg); color: var(--badge-quality-text); }
+  .severity-tag.signal { background: var(--badge-signal-bg); color: var(--badge-signal-text); }
+
+  /* PITCH BOX */
+  .pitch-box {
+    background: var(--pitch-bg); color: var(--pitch-text); border-radius: 10px;
+    padding: 28px 32px; margin: 18px 0; line-height: 1.7; font-size: 14px;
+    border: 1px solid var(--border); transition: background 0.3s, border-color 0.3s;
+  }
+  .pitch-box p { color: var(--pitch-text); margin-bottom: 12px; }
+  .pitch-box p:last-child { margin-bottom: 0; }
+  .pitch-box strong { color: var(--pitch-accent); }
+  [data-theme="dark"] .pitch-box strong { color: #f5f5f7; }
+
+  /* CONCEPTS */
+  .concepts-table td:first-child { font-weight: 700; color: var(--text); width: 170px; }
+  .concepts-table td:nth-child(3) { color: var(--text-muted); font-style: italic; font-size: 13px; }
+
+  /* QUESTIONS */
+  .questions-list { list-style: none; counter-reset: question; }
+  .questions-list li {
+    counter-increment: question; padding: 12px 14px 12px 48px; position: relative;
+    border-bottom: 1px solid var(--border-light); color: var(--text-secondary); font-size: 14px;
+  }
+  .questions-list li:last-child { border-bottom: none; }
+  .questions-list li::before {
+    content: counter(question, decimal-leading-zero); position: absolute; left: 14px; top: 12px;
+    font-size: 13px; font-weight: 800; color: var(--text-muted);
+  }
+
+  /* ARCHI DIAGRAM */
+  .archi-diagram {
+    background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px;
+    padding: 24px; margin: 18px 0; overflow-x: auto; transition: background 0.3s, border-color 0.3s;
+  }
+  .archi-diagram pre {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 12px; line-height: 1.5; color: var(--text-secondary); margin: 0; white-space: pre;
+  }
+
+  /* FLOW DIAGRAM */
+  .flow-diagram {
+    background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 24px; margin: 18px 0; transition: background 0.3s, border-color 0.3s;
+  }
+  .flow-diagram pre {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 12px; line-height: 1.6; color: var(--text-secondary); margin: 0; white-space: pre;
+  }
+
+  .footer { text-align: center; padding: 20px 0 12px; color: var(--text-muted); font-size: 12px; }
+  strong { font-weight: 700; }
+
+  /* PRINT */
+  @media print {
+    body { background: white !important; color: #1d1d1f !important; padding: 0; font-size: 12px; }
+    .theme-toggle { display: none !important; }
+    .container { max-width: 100%; }
+    .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin-bottom: 16px; padding: 24px 28px; }
+    .section {
+      box-shadow: none; border: 1px solid #d2d2d7; padding: 20px 24px;
+      margin-bottom: 14px; page-break-inside: avoid; background: white !important;
+    }
+    .step-detail { page-break-inside: avoid; }
+    .metric-card, .callout, .deep-dive, .key-insight, .pitch-box,
+    .pipeline-step .step-box, .section-number, .step-detail-number,
+    .metric-badge, .severity-tag, .archi-diagram, .flow-diagram {
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .section-page-break { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<div class="theme-toggle" onclick="toggleTheme()">
+  <span class="icon" id="theme-icon">&#9788;</span>
+  <span id="theme-label">Light</span>
+</div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-badge">Product Mastery Card</div>
+    <h1>DocuQuery AI</h1>
+    <div class="header-subtitle">Mehdi Bargach &middot; 2026</div>
+  </div>
+
+  <!-- EN 1 PHRASE -->
+  <div class="one-liner">
+    <p>Un syst&egrave;me de questions-r&eacute;ponses augment&eacute; qui permet d'interroger en langage naturel n'importe quel document propri&eacute;taire (PDF, texte, tableur) et d'obtenir une r&eacute;ponse pr&eacute;cise avec la page et le paragraphe exact d'o&ugrave; elle vient.</p>
+  </div>
+
+  <!-- 1. LE PROBLÈME -->
+  <div class="section">
+    <div class="section-number">1</div>
+    <h2>Le probl&egrave;me</h2>
+    <p><strong>Situation :</strong> tu as un document propri&eacute;taire &mdash; un PRD, un contrat, un rapport d'audit. Tu veux une info pr&eacute;cise.</p>
+
+    <table class="problem-table">
+      <thead><tr><th>Option</th><th>Ce qui se passe</th><th>Pourquoi c'est cass&eacute;</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Coller dans ChatGPT</td>
+          <td>Le LLM a une <strong>fen&ecirc;tre de contexte</strong> = quantit&eacute; max de texte qu'il peut lire en une fois. GPT-4 &asymp; 128K tokens, Claude &asymp; 200K tokens.</td>
+          <td><strong>1)</strong> Le LLM traite bien le d&eacute;but et la fin, mais rate l'info au milieu &mdash; c'est le <strong>&laquo;&nbsp;lost in the middle&nbsp;&raquo;</strong>, document&eacute; par la recherche.<br><br><strong>2)</strong> Plus le texte est long, plus c'est cher en tokens.<br><br><strong>3)</strong> Aucune citation &mdash; le LLM dit &laquo;&nbsp;le budget est 18M&nbsp;&raquo; mais quelle page&nbsp;? Inv&eacute;rifiable.</td>
+        </tr>
+        <tr>
+          <td>Demander SANS le document</td>
+          <td>Le LLM n'a jamais vu ton doc (propri&eacute;taire, pas dans ses donn&eacute;es d'entra&icirc;nement)</td>
+          <td>Il <strong>hallucine</strong> = il g&eacute;n&egrave;re une r&eacute;ponse cr&eacute;dible (bon ton, bonne structure) mais les faits sont invent&eacute;s.</td>
+        </tr>
+        <tr>
+          <td>Ctrl+F</td>
+          <td>Recherche par <strong>mots-cl&eacute;s exacts</strong> uniquement</td>
+          <td>Tu tapes &laquo;&nbsp;budget&nbsp;&raquo; &rarr; rate &laquo;&nbsp;co&ucirc;t d'acquisition&nbsp;&raquo; ou &laquo;&nbsp;CAC&nbsp;&raquo; ou &laquo;&nbsp;$3,600&nbsp;&raquo;. C'est une recherche <strong>lexicale</strong> (mots exacts) et pas <strong>s&eacute;mantique</strong> (le sens de ta question).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="key-insight">
+      <p><strong>Pourquoi le probl&egrave;me ne dispara&icirc;t pas avec des context windows plus grands&nbsp;:</strong> m&ecirc;me avec 1M+ tokens, RAG reste pertinent &mdash; la recherche cibl&eacute;e donne de meilleures r&eacute;ponses que noyer le LLM dans 200 pages, &ccedil;a co&ucirc;te ~100x moins cher, et un context window g&eacute;ant ne donne toujours aucune citation v&eacute;rifiable.</p>
+    </div>
+
+    <p><strong>Le vrai besoin&nbsp;:</strong> interroger un document que l'IA n'a jamais vu, obtenir une r&eacute;ponse fond&eacute;e, avec la source exacte pour v&eacute;rifier.</p>
+  </div>
+
+  <!-- 2. RAG — LE PRINCIPE -->
+  <div class="section">
+    <div class="section-number">2</div>
+    <h2>RAG &mdash; comment &ccedil;a marche</h2>
+
+    <p><strong>RAG = Retrieval-Augmented Generation</strong> (g&eacute;n&eacute;ration augment&eacute;e par la r&eacute;cup&eacute;ration d'information).</p>
+    <p>Un LLM est puissant pour comprendre et r&eacute;diger, mais il ne conna&icirc;t que ce sur quoi il a &eacute;t&eacute; entra&icirc;n&eacute;. Tes documents internes, il ne les a jamais vus.</p>
+
+    <table>
+      <thead><tr><th>Temps</th><th>Ce qui se passe</th><th>R&eacute;sultat</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Retrieval</strong><br>(r&eacute;cup&eacute;ration)</td>
+          <td>On d&eacute;coupe le document en petits morceaux. Quand tu poses une question, le syst&egrave;me cherche les morceaux qui parlent du m&ecirc;me sujet que ta question.</td>
+          <td>On isole les <strong>15 passages</strong> les plus pertinents sur 100+ morceaux au total.</td>
+        </tr>
+        <tr>
+          <td><strong>2. Generation</strong><br>(g&eacute;n&eacute;ration)</td>
+          <td>On donne ces 15 passages au LLM avec ta question. Le LLM lit <strong>uniquement</strong> ces passages et r&eacute;dige sa r&eacute;ponse en citant d'o&ugrave; vient chaque information.</td>
+          <td>R&eacute;ponse pr&eacute;cise, fond&eacute;e sur le document, avec page et paragraphe. Si l'info n'est pas dans les passages &rarr; refus explicite.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="callout-title">Pourquoi &ccedil;a &eacute;limine l'hallucination</div>
+      <p>Le LLM ne r&eacute;pond jamais de m&eacute;moire. Il a toujours le texte source sous les yeux. Pas de texte source = pas de r&eacute;ponse.</p>
+    </div>
+  </div>
+
+  <!-- 3. LE STACK COMPLET -->
+  <div class="section">
+    <div class="section-number">3</div>
+    <h2>Le stack complet</h2>
+
+    <table>
+      <thead><tr><th>Couche</th><th>Techno</th><th>C'est quoi</th><th>Pourquoi ce choix</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Frontend</strong></td>
+          <td>React + Tailwind (Lovable)</td>
+          <td>L'interface utilisateur &mdash; upload de fichier, zone de question, affichage r&eacute;ponse + citations</td>
+          <td>Lovable = outil no-code qui g&eacute;n&egrave;re du React via des prompts. Permet de construire un frontend pro sans coder le front soi-m&ecirc;me.</td>
+        </tr>
+        <tr>
+          <td><strong>Backend</strong></td>
+          <td>FastAPI (Python)</td>
+          <td>Le serveur qui re&ccedil;oit les requ&ecirc;tes, ex&eacute;cute le pipeline RAG, retourne les r&eacute;ponses</td>
+          <td>FastAPI = framework Python pour cr&eacute;er des APIs. Standard pour les APIs ML/AI. M&ecirc;me langage que le pipeline RAG.</td>
+        </tr>
+        <tr>
+          <td><strong>H&eacute;bergement</strong></td>
+          <td>Render ($7/mois)</td>
+          <td>Le service cloud qui fait tourner le backend 24/7 sur Internet</td>
+          <td>Alternative simple &agrave; AWS/GCP. Plan Starter = $7/mois, 512 MB RAM. D&eacute;ploiement auto &agrave; chaque push GitHub.</td>
+        </tr>
+        <tr>
+          <td><strong>Embeddings</strong></td>
+          <td>text-embedding-3-small (OpenAI)</td>
+          <td>Transforme les textes en vecteurs (listes de 1536 nombres qui capturent le sens). Utilis&eacute; 2 fois&nbsp;: une fois pour indexer les morceaux du document, une fois pour transformer la question.</td>
+          <td>$0.02 / million de tokens. M&ecirc;me fournisseur qu'OpenAI = une seule cl&eacute; API, facturation simple.</td>
+        </tr>
+        <tr>
+          <td><strong>LLM</strong></td>
+          <td>GPT-4o-mini (OpenAI)</td>
+          <td>G&eacute;n&egrave;re la r&eacute;ponse en langage naturel &agrave; partir des passages retrouv&eacute;s. Ne fait PAS les embeddings &mdash; c'est un mod&egrave;le diff&eacute;rent.</td>
+          <td>~20x moins cher que Claude Sonnet. Suffisant pour du RAG &mdash; la qualit&eacute; vient du pipeline, pas de la puissance brute du LLM.</td>
+        </tr>
+        <tr>
+          <td><strong>Stockage vectoriel</strong></td>
+          <td>numpy (en m&eacute;moire)</td>
+          <td>Stocke les vecteurs en RAM (= la m&eacute;moire vive du serveur). Compare le vecteur de la question avec tous les vecteurs stock&eacute;s pour trouver les 15 plus proches. Donn&eacute;es perdues si le serveur red&eacute;marre.</td>
+          <td>Remplace ChromaDB qui crashait (conflit SQLite/iCloud). ~50 lignes de code, z&eacute;ro d&eacute;pendance externe, suffisant pour un seul document.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. SCHÉMA D'ARCHITECTURE -->
+  <div class="section">
+    <div class="section-number">4</div>
+    <h2>Le sch&eacute;ma d'architecture</h2>
+
+    <div class="archi-diagram">
+      <pre>&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;         &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;         &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;                  &#9474;  HTTPS  &#9474;           FASTAPI (Render)           &#9474;  HTTPS  &#9474;              &#9474;
+&#9474;  FRONTEND        &#9474;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9654;&#9474;                                      &#9474;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9654;&#9474;  OPENAI API   &#9474;
+&#9474;  React/Tailwind  &#9474;         &#9474;  /upload  &#8594; parse, chunk, embed      &#9474;         &#9474;              &#9474;
+&#9474;  (Lovable)       &#9474;&#9668;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9474;  /query   &#8594; search, generate       &#9474;&#9668;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9474;  embeddings   &#9474;
+&#9474;                  &#9474;  JSON   &#9474;  /health  &#8594; status                  &#9474;  JSON   &#9474;  + GPT-4o-mini&#9474;
+&#9474;  docuqueryai.    &#9474;         &#9474;                                      &#9474;         &#9474;              &#9474;
+&#9474;  lovable.app     &#9474;         &#9474;  docuquery-ai-5rfb.onrender.com      &#9474;         &#9474;  api.openai   &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;         &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;         &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+                                          &#9474;
+                                          &#9474; in-memory
+                                          &#9660;
+                                   &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+                                   &#9474; numpy store  &#9474;
+                                   &#9474; chunks[]     &#9474;
+                                   &#9474; embeddings   &#9474;
+                                   &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</pre>
+    </div>
+
+    <div class="key-insight">
+      <p><strong>HTTPS</strong> = HTTP + chiffrement. HTTP est le protocole standard pour que deux machines communiquent sur Internet (le navigateur demande, le serveur r&eacute;pond). Le &laquo;&nbsp;S&nbsp;&raquo; signifie que les donn&eacute;es sont chiffr&eacute;es pendant le transport &mdash; personne ne peut les lire en chemin. <strong>Analogie&nbsp;:</strong> HTTP = carte postale (lisible par tous), HTTPS = lettre scell&eacute;e (seul le destinataire peut l'ouvrir). Render fournit automatiquement ce chiffrement.</p>
+    </div>
+
+    <p><strong>Le flux&nbsp;:</strong> le frontend n'a aucune logique m&eacute;tier. Il envoie des requ&ecirc;tes HTTPS au backend, qui fait tout le travail (parsing, chunking, embedding, search, generation) et retourne du JSON (un format texte structur&eacute; que les machines savent lire).</p>
+
+    <p><strong>numpy store&nbsp;:</strong> ce sont 2 variables Python stock&eacute;es dans la m&eacute;moire vive (RAM) du serveur &mdash; la liste des morceaux de texte et leurs vecteurs associ&eacute;s. Ce n'est pas une base de donn&eacute;es &mdash; si le serveur red&eacute;marre, tout est perdu et l'utilisateur doit r&eacute;-uploader son document.</p>
+  </div>
+
+  <!-- 5. LE PIPELINE -->
+  <div class="section section-page-break">
+    <div class="section-number">5</div>
+    <h2>Le pipeline &mdash; 5 &eacute;tapes</h2>
+
+    <p>Chaque &eacute;tape est un <strong>module Python ind&eacute;pendant</strong>. Aucun module ne d&eacute;pend d'un autre &mdash; ils sont tous orchestr&eacute;s par <code>api.py</code> (le chef d'orchestre).</p>
+
+    <div class="callout">
+      <div class="callout-title">2 flux distincts &mdash; ne pas confondre</div>
+      <p><strong>Upload</strong> (l'utilisateur envoie un fichier)&nbsp;: le frontend envoie le fichier au backend, qui ex&eacute;cute PARSE &rarr; CHUNK &rarr; EMBED (appel &agrave; OpenAI) &rarr; STORE. Le backend r&eacute;pond &laquo;&nbsp;pr&ecirc;t, 48 morceaux index&eacute;s&nbsp;&raquo;. <strong>Pas de r&eacute;ponse g&eacute;n&eacute;r&eacute;e ici</strong> &mdash; on pr&eacute;pare le terrain.</p>
+      <p><strong>Query</strong> (l'utilisateur pose une question)&nbsp;: le backend transforme la question en vecteur (appel OpenAI), cherche les 15 morceaux les plus proches (numpy, <1ms), puis envoie ces morceaux + la question &agrave; GPT-4o-mini (2e appel OpenAI) qui r&eacute;dige la r&eacute;ponse avec citations.</p>
+      <p><strong>Le frontend ne parle jamais &agrave; OpenAI directement.</strong> Tout passe par le backend. Le frontend ne sait m&ecirc;me pas qu'OpenAI existe.</p>
+    </div>
+
+    <div class="pipeline-flow">
+      <div class="pipeline-step"><div class="step-box">PARSE</div><div class="step-label">extraction</div></div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step"><div class="step-box">CHUNK</div><div class="step-label">d&eacute;coupage</div></div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step"><div class="step-box">EMBED</div><div class="step-label">vectorisation</div></div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step"><div class="step-box">SEARCH</div><div class="step-label">recherche</div></div>
+      <div class="pipeline-arrow">&rarr;</div>
+      <div class="pipeline-step"><div class="step-box">GENERATE</div><div class="step-label">r&eacute;ponse</div></div>
+    </div>
+
+    <!-- PARSE -->
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">1</div>
+        <div class="step-detail-title">PARSE <span>extraction &middot; rag/parser.py</span></div>
+      </div>
+      <div class="step-detail-body">
+        <div class="two-col">
+          <div class="col-what">
+            <div class="col-label">Ce qui se passe</div>
+            <p>On extrait le texte brut du fichier.</p>
+            <p><strong>PDF</strong> &rarr; pdfplumber, page par page. On enregistre les positions de chaque page dans le texte (page 1 = caract&egrave;res 0 &agrave; 2400, page 2 = 2401 &agrave; 4800...).</p>
+            <p><strong>CSV</strong> &rarr; chaque ligne convertie en phrase lisible.</p>
+            <p><strong>TXT</strong> &rarr; lecture directe.</p>
+          </div>
+          <div class="col-why">
+            <div class="col-label">Pourquoi on fait &ccedil;a</div>
+            <p>L'enregistrement des positions de pages est <strong>essentiel pour les citations</strong>.</p>
+            <p>C'est gr&acirc;ce &agrave; &ccedil;a qu'&agrave; la fin, quand le syst&egrave;me donne une r&eacute;ponse, il peut remonter le fil et dire &laquo;&nbsp;cette information vient de la <strong>Page 22</strong>&nbsp;&raquo;.</p>
+            <p>Sans &ccedil;a &rarr; r&eacute;ponse correcte mais aucun moyen de savoir d'o&ugrave; elle vient dans le document.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHUNK -->
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">2</div>
+        <div class="step-detail-title">CHUNK <span>d&eacute;coupage &middot; rag/chunker.py</span></div>
+      </div>
+      <div class="step-detail-body">
+        <div class="two-col">
+          <div class="col-what">
+            <div class="col-label">Ce qui se passe</div>
+            <p>Le texte est d&eacute;coup&eacute; en blocs de <strong>500 tokens</strong> (~375 mots). Chaque bloc chevauche le suivant de <strong>100 tokens</strong>.</p>
+            <p>Tokenizer&nbsp;: <code>cl100k_base</code> (tiktoken &mdash; le m&ecirc;me tokenizer utilis&eacute; par les mod&egrave;les OpenAI).</p>
+          </div>
+          <div class="col-why">
+            <div class="col-label">Pourquoi on fait &ccedil;a</div>
+            <p>La recherche est <strong>plus pr&eacute;cise sur des petits blocs cibl&eacute;s</strong> que sur des pages enti&egrave;res.</p>
+            <p>Le chevauchement de 100 tokens sert &agrave; <strong>ne jamais couper une id&eacute;e en deux</strong>&nbsp;: si une phrase est &agrave; la fronti&egrave;re entre deux blocs, elle appara&icirc;t dans les deux.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMBED -->
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">3</div>
+        <div class="step-detail-title">EMBED <span>vectorisation &middot; rag/embedder.py</span></div>
+      </div>
+      <div class="step-detail-body">
+        <div class="two-col">
+          <div class="col-what">
+            <div class="col-label">Ce qui se passe</div>
+            <p>Chaque chunk est envoy&eacute; via Internet (HTTPS) au mod&egrave;le <strong>text-embedding-3-small</strong> (h&eacute;berg&eacute; chez OpenAI) par batchs de 50. OpenAI retourne un <strong>vecteur</strong> pour chaque chunk &mdash; c'est un aller-retour r&eacute;seau, pas un calcul local.</p>
+          </div>
+          <div class="col-why">
+            <div class="col-label">Pourquoi on fait &ccedil;a</div>
+            <p>C'est cette &eacute;tape qui rend la <strong>recherche par sens</strong> possible &mdash; chercher par signification au lieu de chercher par mots-cl&eacute;s.</p>
+          </div>
+        </div>
+        <div class="deep-dive">
+          <div class="deep-dive-title">C'est quoi un vecteur, concr&egrave;tement&nbsp;?</div>
+          <p>Un vecteur, c'est une <strong>liste ordonn&eacute;e de nombres</strong>. Ici, chaque chunk est transform&eacute; en une liste de <strong>1536 nombres d&eacute;cimaux</strong> &mdash; par exemple&nbsp;: <code>[0.023, -0.041, 0.089, ..., 0.012]</code>.</p>
+          <p><strong>Pourquoi 1536&nbsp;?</strong> C'est la taille fix&eacute;e par le mod&egrave;le d'embedding utilis&eacute;. Chaque nombre repr&eacute;sente une dimension du sens. Comme des coordonn&eacute;es GPS&nbsp;: au lieu de 2 dimensions (latitude, longitude), on a 1536 dimensions pour capturer toutes les nuances de sens d'un texte.</p>
+          <p><strong>Ce que &ccedil;a permet&nbsp;:</strong> &laquo;&nbsp;co&ucirc;t d'acquisition client&nbsp;&raquo; et &laquo;&nbsp;combien on d&eacute;pense pour acqu&eacute;rir un utilisateur&nbsp;&raquo; &rarr; vecteurs tr&egrave;s proches, m&ecirc;me si <strong>aucun mot n'est commun</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">4</div>
+        <div class="step-detail-title">SEARCH <span>recherche &middot; rag/store.py</span></div>
+      </div>
+      <div class="step-detail-body">
+        <div class="two-col">
+          <div class="col-what">
+            <div class="col-label">Ce qui se passe</div>
+            <p>La question est aussi transform&eacute;e en vecteur (via le m&ecirc;me mod&egrave;le d'embedding, 2e appel &agrave; OpenAI). Ensuite, numpy compare ce vecteur avec <strong>tous</strong> les vecteurs des chunks gr&acirc;ce &agrave; la <strong>similarit&eacute; cosinus</strong>.</p>
+            <p><strong>Analogie&nbsp;:</strong> imagine que chaque morceau de texte est une fl&egrave;che qui pointe dans une direction. La similarit&eacute; cosinus mesure si deux fl&egrave;ches pointent dans la m&ecirc;me direction (= parlent du m&ecirc;me sujet). 1.0 = m&ecirc;me direction exacte. 0 = rien &agrave; voir.</p>
+            <p><strong>Concr&egrave;tement&nbsp;:</strong> numpy fait un calcul math&eacute;matique (produit scalaire normalis&eacute;) entre le vecteur de ta question et chacun des ~240 vecteurs stock&eacute;s. &Ccedil;a prend <strong>moins d'1 milliseconde</strong>. On trie les r&eacute;sultats et on garde les <strong>15 chunks les plus proches</strong>.</p>
+          </div>
+          <div class="col-why">
+            <div class="col-label">Pourquoi on fait &ccedil;a</div>
+            <p>C'est le c&oelig;ur du <strong>&laquo;&nbsp;Retrieval&nbsp;&raquo;</strong> dans RAG. Sur 100+ chunks, on isole les 15 qui parlent du m&ecirc;me sujet que ta question.</p>
+          </div>
+        </div>
+        <div class="deep-dive">
+          <div class="deep-dive-title">Pourquoi 15 chunks&nbsp;?</div>
+          <p>Ce <strong>n'est pas un standard</strong> &mdash; c'est un param&egrave;tre (TOP_K) qu'on ajuste. J'ai commenc&eacute; &agrave; 5, puis 10, puis 15. &Agrave; 10, une question factuelle &eacute;chouait&nbsp;: le chunk qui contenait le bon chiffre n'&eacute;tait pas r&eacute;cup&eacute;r&eacute;.</p>
+          <p><strong>En entreprise</strong>, ce param&egrave;tre d&eacute;pend de la taille des documents et du co&ucirc;t. On ajoute souvent une &eacute;tape de <strong>re-ranking</strong> (un deuxi&egrave;me mod&egrave;le qui reclasse les chunks par pertinence).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENERATE -->
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">5</div>
+        <div class="step-detail-title">GENERATE <span>r&eacute;ponse &middot; rag/generator.py</span></div>
+      </div>
+      <div class="step-detail-body">
+        <div class="two-col">
+          <div class="col-what">
+            <div class="col-label">Ce qui se passe</div>
+            <p>Les 15 chunks sont envoy&eacute;s &agrave; <strong>GPT-4o-mini</strong> (un mod&egrave;le diff&eacute;rent de celui qui fait les embeddings) avec la question. C'est un <strong>2e appel HTTPS &agrave; OpenAI</strong>. Le LLM a un <strong>system prompt strict</strong> (des instructions qu'il doit suivre)&nbsp;: r&eacute;pondre uniquement depuis le texte fourni, citer la source pour chaque fait, refuser si l'info n'y est pas.</p>
+          </div>
+          <div class="col-why">
+            <div class="col-label">Pourquoi on fait &ccedil;a</div>
+            <p>C'est le <strong>&laquo;&nbsp;Generation&nbsp;&raquo;</strong> dans RAG. Le LLM ne r&eacute;pond jamais de m&eacute;moire &mdash; il a toujours les passages source sous les yeux.</p>
+          </div>
+        </div>
+        <div class="deep-dive">
+          <div class="deep-dive-title">Comment marchent les citations</div>
+          <p>Avant d'envoyer les chunks au LLM, on annote chaque paragraphe avec un marqueur&nbsp;: le 1er paragraphe re&ccedil;oit <strong>[P1]</strong> (= Paragraphe 1), le 2&egrave;me <strong>[P2]</strong>, etc.</p>
+          <p>R&eacute;sultat&nbsp;: le LLM peut citer <strong>&laquo;&nbsp;Page 22, Paragraphe 3&nbsp;&raquo;</strong> &mdash; pas juste &laquo;&nbsp;Page 22&nbsp;&raquo;.</p>
+          <p>Le system prompt contient aussi une <strong>r&egrave;gle anti-jargon</strong>&nbsp;: le LLM n'a pas le droit d'utiliser des termes techniques (chunks, embeddings, retrieval) dans ses r&eacute;ponses. L'utilisateur final voit &laquo;&nbsp;le document&nbsp;&raquo;, pas les rouages du pipeline.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. LES 3 ENDPOINTS -->
+  <div class="section">
+    <div class="section-number">6</div>
+    <h2>Les 3 endpoints de l'API</h2>
+
+    <table>
+      <thead><tr><th>Endpoint</th><th>M&eacute;thode</th><th>Ce qu'il re&ccedil;oit</th><th>Ce qu'il fait</th><th>Ce qu'il retourne</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>/health</code></td>
+          <td>GET</td>
+          <td>Rien</td>
+          <td>V&eacute;rifie que le serveur tourne</td>
+          <td><code>{"status": "ok"}</code></td>
+        </tr>
+        <tr>
+          <td><code>/upload</code></td>
+          <td>POST</td>
+          <td>Un fichier (PDF, TXT ou CSV)</td>
+          <td>V&eacute;rifie taille &le;10 MB &rarr; parse &rarr; chunk &rarr; embed &rarr; stocke en m&eacute;moire</td>
+          <td><code>{"num_chunks": 48, "status": "ready"}</code></td>
+        </tr>
+        <tr>
+          <td><code>/query</code></td>
+          <td>POST</td>
+          <td><code>{"question": "..."}</code></td>
+          <td>Embed la question &rarr; cherche 15 chunks &rarr; envoie au LLM</td>
+          <td><code>{"answer": "...", "latency": 2.3, "sources": [...]}</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Ce que <code>sources</code> contient&nbsp;:</strong> pour chaque chunk utilis&eacute; &mdash; son index, la page de d&eacute;but/fin, la distance cosinus, et les 150 premiers caract&egrave;res du texte. C'est ce qui permet au frontend d'afficher les citations.</p>
+  </div>
+
+  <!-- 7. PARCOURS D'UN FICHIER -->
+  <div class="section">
+    <div class="section-number">7</div>
+    <h2>Le parcours d'un fichier &mdash; de l'upload &agrave; &laquo;&nbsp;ready&nbsp;&raquo;</h2>
+
+    <div class="flow-diagram">
+      <pre>Utilisateur clique &laquo;&nbsp;Upload&nbsp;&raquo; dans le navigateur
+        &darr;
+POST /upload (le fichier part via le r&eacute;seau)
+        &darr;
+V&eacute;rification taille : &gt; 10 MB ? &rarr; HTTP 413 &laquo;&nbsp;File too large&nbsp;&raquo;
+        &darr;
+Adapter : traduit le format du fichier re&ccedil;u vers le format attendu par le parser
+        &darr;
+PARSE &rarr; CHUNK &rarr; EMBED &rarr; STORE (m&ecirc;me pipeline que les 4 premi&egrave;res &eacute;tapes)
+        &darr;
+R&eacute;ponse : {"num_chunks": 48, "status": "ready"}</pre>
+    </div>
+
+    <div class="key-insight">
+      <p><strong>Single-tenant&nbsp;:</strong> le backend ne garde qu'un seul document en m&eacute;moire &agrave; la fois. Si un autre utilisateur upload un fichier, le pr&eacute;c&eacute;dent est effac&eacute;. Si le serveur red&eacute;marre, tout est perdu. C'est un choix de prototype&nbsp;: pas de base de donn&eacute;es, pas de sessions.</p>
+    </div>
+  </div>
+
+  <!-- 8. LE DÉPLOIEMENT -->
+  <div class="section section-page-break">
+    <div class="section-number">8</div>
+    <h2>Le d&eacute;ploiement &mdash; Render</h2>
+
+    <table>
+      <thead><tr><th>&Eacute;l&eacute;ment</th><th>D&eacute;tail</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Service</strong></td><td>Web service, Python 3.11</td></tr>
+        <tr><td><strong>Plan</strong></td><td>Starter, $7/mois, 512 MB RAM</td></tr>
+        <tr><td><strong>D&eacute;ploiement</strong></td><td>Automatique &agrave; chaque <code>git push</code> sur <code>main</code></td></tr>
+        <tr><td><strong>Variable d'env</strong></td><td><code>OPENAI_API_KEY</code> (secret, configur&eacute;e dans le dashboard Render)</td></tr>
+        <tr><td><strong>Limite RAM</strong></td><td>512 MB &rarr; g&egrave;re des PDFs jusqu'&agrave; ~120 pages</td></tr>
+        <tr><td><strong>URL</strong></td><td><code>docuquery-ai-5rfb.onrender.com</code></td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Pourquoi Python 3.11 et pas la derni&egrave;re version&nbsp;:</strong> tiktoken (le tokenizer qui d&eacute;coupe le texte en tokens) ne supportait pas Python 3.14. Pin explicite dans la config Render.</p>
+  </div>
+
+  <!-- 9. CORS -->
+  <div class="section">
+    <div class="section-number">9</div>
+    <h2>CORS &mdash; le probl&egrave;me cross-origin</h2>
+
+    <p><strong>C'est quoi&nbsp;:</strong> quand ton frontend (<code>docuqueryai.lovable.app</code>) appelle ton backend (<code>onrender.com</code>), le navigateur bloque la requ&ecirc;te par d&eacute;faut. C'est une protection &mdash; un site web ne peut pas appeler n'importe quel serveur sans permission. <strong>CORS</strong> est le m&eacute;canisme qui dit au navigateur&nbsp;: &laquo;&nbsp;ce frontend a le droit de m'appeler&nbsp;&raquo;.</p>
+
+    <p><strong>Le probl&egrave;me rencontr&eacute;&nbsp;:</strong> Lovable a deux domaines &mdash; <code>*.lovableproject.com</code> (pendant le dev) et <code>*.lovable.app</code> (l'app publi&eacute;e). La config initiale ne couvrait qu'un seul &rarr; &ccedil;a marchait en dev mais pas en production.</p>
+
+    <p><strong>La solution&nbsp;:</strong> une regex qui couvre les deux domaines d'un coup, plus les ports localhost pour le dev local.</p>
+  </div>
+
+  <!-- 10. DÉFIS DE PRODUCTION -->
+  <div class="section">
+    <div class="section-number">10</div>
+    <h2>Les d&eacute;fis de production</h2>
+
+    <table>
+      <thead><tr><th>#</th><th>Probl&egrave;me</th><th>Cause</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>1</strong></td>
+          <td>ChromaDB crash au d&eacute;marrage</td>
+          <td>SQLite incompatible avec les dossiers synchronis&eacute;s iCloud</td>
+          <td>Remplac&eacute; par numpy (~50 lignes). M&ecirc;me API, z&eacute;ro d&eacute;pendance.</td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td>CORS bloqu&eacute; en prod</td>
+          <td>Lovable utilise 2 domaines diff&eacute;rents</td>
+          <td>Regex combin&eacute;e couvrant les deux</td>
+        </tr>
+        <tr>
+          <td><strong>3</strong></td>
+          <td>PDF 200+ pages &rarr; crash m&eacute;moire</td>
+          <td>Pas de limite de taille + algorithmes O(n&sup2;) dans le chunking</td>
+          <td>Limite 10 MB + batching embeddings + optimisation O(n)</td>
+        </tr>
+        <tr>
+          <td><strong>4</strong></td>
+          <td>Python 3.14 incompatible</td>
+          <td>tiktoken ne supportait pas cette version</td>
+          <td>Pin &agrave; Python 3.11</td>
+        </tr>
+        <tr>
+          <td><strong>5</strong></td>
+          <td>Frontend affiche &laquo;&nbsp;400&nbsp;&raquo; au lieu du message</td>
+          <td>Le frontend lisait le code HTTP, pas le body</td>
+          <td>Frontend lit <code>response.body.detail</code></td>
+        </tr>
+        <tr>
+          <td><strong>6</strong></td>
+          <td>Lovable g&eacute;n&eacute;rait des mocks</td>
+          <td>L'IA de Lovable simulait les r&eacute;ponses au lieu d'appeler le vrai backend</td>
+          <td>Prompt explicite&nbsp;: &laquo;&nbsp;remove all mocks&nbsp;&raquo;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 11. MÉTRIQUES -->
+  <div class="section section-page-break">
+    <div class="section-number">11</div>
+    <h2>M&eacute;triques d'&eacute;valuation</h2>
+
+    <p>Un produit RAG peut &eacute;chouer de 4 fa&ccedil;ons&nbsp;: r&eacute;ponse fausse, fait invent&eacute;, citation inexacte, ou r&eacute;ponse incoh&eacute;rente d'une fois &agrave; l'autre. Chaque m&eacute;trique cible un de ces risques.</p>
+
+    <div class="callout">
+      <div class="callout-title">C'est quoi un &laquo;&nbsp;golden dataset&nbsp;&raquo;&nbsp;?</div>
+      <p>C'est un ensemble fixe de <strong>12 questions + r&eacute;ponses attendues</strong>, pr&eacute;par&eacute;es &agrave; l'avance. On pose <strong>toujours les m&ecirc;mes 12 questions</strong> &agrave; chaque version du produit, comme un examen standardis&eacute;. Pourquoi&nbsp;? Parce que si tu poses des questions diff&eacute;rentes &agrave; chaque test, tu ne peux pas savoir si une am&eacute;lioration est r&eacute;elle ou si la question &eacute;tait juste plus facile. Le golden dataset garantit que la comparaison est fiable.</p>
+      <p><strong>Composition&nbsp;:</strong> 4 questions factuelles (un chiffre pr&eacute;cis), 3 multi-hop (synth&egrave;se de plusieurs pages), 2 de synth&egrave;se (r&eacute;sum&eacute;), 2 adversariales (l'info n'existe PAS dans le document &mdash; le syst&egrave;me doit refuser), 1 de consistance (re-poser la m&ecirc;me question pour v&eacute;rifier que la r&eacute;ponse ne change pas).</p>
+    </div>
+
+    <p>Chaque m&eacute;trique est class&eacute;e en 3 niveaux de s&eacute;v&eacute;rit&eacute;&nbsp;:</p>
+
+    <table>
+      <thead><tr><th>Niveau</th><th>Signification</th><th>Inspiration</th></tr></thead>
+      <tbody>
+        <tr><td><span class="severity-tag blocking">BLOCKING</span></td><td>Si &ccedil;a &eacute;choue, on ne shippe pas. Non-n&eacute;gociable.</td><td>Cooper Stage-Gate &mdash; certains crit&egrave;res ne se n&eacute;gocient pas</td></tr>
+        <tr><td><span class="severity-tag quality">QUALITY</span></td><td>Seuil configurable. Le Builder d&eacute;cide si c'est acceptable.</td><td>RAGAS (framework d'&eacute;val RAG open-source, seuil usuel ~80%)</td></tr>
+        <tr><td><span class="severity-tag signal">SIGNAL</span></td><td>On mesure pour surveiller, mais &ccedil;a ne bloque pas le lancement.</td><td>Google SRE Error Budget &mdash; les causes externes sont monitor&eacute;es, pas bloquantes</td></tr>
+      </tbody>
+    </table>
+
+    <div class="metrics-grid">
+      <div class="metric-card blocking">
+        <div class="metric-badge">BLOCKING</div>
+        <div class="metric-value">100%</div>
+        <div class="metric-label">Pr&eacute;cision factuelle (G2)</div>
+        <div class="metric-desc">4/4 questions de fait pur exactement correctes. <strong>Pourquoi 100%&nbsp;:</strong> si le syst&egrave;me donne un mauvais chiffre sur une question simple, la confiance est perdue. C'est le minimum vital &mdash; pas de marge d'erreur sur les faits purs.</div>
+      </div>
+      <div class="metric-card blocking">
+        <div class="metric-badge">BLOCKING</div>
+        <div class="metric-value">0</div>
+        <div class="metric-label">Hallucinations (G5)</div>
+        <div class="metric-desc">0/2 &mdash; quand l'info n'est PAS dans le document, le LLM refuse au lieu d'inventer. <strong>Pourquoi 0&nbsp;:</strong> une seule r&eacute;ponse invent&eacute;e suffit &agrave; rendre le produit inutilisable en contexte professionnel.</div>
+      </div>
+      <div class="metric-card quality">
+        <div class="metric-badge">QUALITY</div>
+        <div class="metric-value">87.5%</div>
+        <div class="metric-label">Pr&eacute;cision globale (G1)</div>
+        <div class="metric-desc">10.5/12 questions vari&eacute;es (factuelles + synth&egrave;se + multi-hop). <strong>Pourquoi &ge; 80%&nbsp;:</strong> align&eacute; avec RAGAS, le benchmark de r&eacute;f&eacute;rence pour les pipelines RAG. Le dataset inclut des questions difficiles (synth&egrave;se, croisement de pages) &mdash; 80% est d&eacute;j&agrave; ambitieux sur ce mix.</div>
+      </div>
+      <div class="metric-card quality">
+        <div class="metric-badge">QUALITY</div>
+        <div class="metric-value">75%</div>
+        <div class="metric-label">Citations (G3)</div>
+        <div class="metric-desc">9/12 citations pointent vers la bonne page. <strong>Pourquoi &ge; 70%&nbsp;:</strong> le LLM peut donner la bonne r&eacute;ponse en citant une page adjacente au lieu de la page exacte. On accepte cette marge, mais une r&eacute;ponse juste mais inv&eacute;rifiable n'a pas de valeur en contexte pro.</div>
+      </div>
+      <div class="metric-card quality">
+        <div class="metric-badge">QUALITY</div>
+        <div class="metric-value">PASS</div>
+        <div class="metric-label">Consistance (G6)</div>
+        <div class="metric-desc">On repose la m&ecirc;me question 2 fois &agrave; des moments diff&eacute;rents. Les faits doivent &ecirc;tre identiques. <strong>Pourquoi&nbsp;:</strong> si le syst&egrave;me dit &laquo;&nbsp;$3,600&nbsp;&raquo; puis &laquo;&nbsp;$4,200&nbsp;&raquo; pour la m&ecirc;me question, la confiance est perdue.</div>
+      </div>
+      <div class="metric-card signal">
+        <div class="metric-badge">SIGNAL</div>
+        <div class="metric-value">8.5s</div>
+        <div class="metric-label">Latence m&eacute;diane (G4)</div>
+        <div class="metric-desc">Le pipeline RAG prend &lt;1s. Le reste = temps de r&eacute;ponse du LLM (d&eacute;pendance externe, hors de notre contr&ocirc;le). <strong>Pourquoi SIGNAL et pas BLOCKING&nbsp;:</strong> on ne peut pas acc&eacute;l&eacute;rer l'API OpenAI &mdash; c'est leur serveur. On mesure sans bloquer.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">Le NO-GO &rarr; CONDITIONAL GO &mdash; ce qui s'est r&eacute;ellement pass&eacute;</div>
+      <p>Au <strong>1er passage de l'eval</strong>, la pr&eacute;cision factuelle (G2) &eacute;tait &agrave; <strong>75%</strong> (3/4). Mon seuil BLOCKING &eacute;tait &agrave; 100%. R&eacute;sultat&nbsp;: <strong>NO-GO</strong> &mdash; on ne shippe pas.</p>
+      <p><strong>Le diagnostic&nbsp;:</strong> une question demandait &laquo;&nbsp;combien de transactions par seconde au lancement&nbsp;?&raquo;. La bonne r&eacute;ponse (&laquo;&nbsp;10,000 TPS&nbsp;&raquo;, page 13) n'&eacute;tait pas dans les 10 morceaux r&eacute;cup&eacute;r&eacute;s. Le syst&egrave;me trouvait un autre morceau (page 45, test de charge &laquo;&nbsp;1,000 TPS&nbsp;&raquo;) qui &eacute;tait plus proche s&eacute;mantiquement de &laquo;&nbsp;au lancement&nbsp;&raquo;.</p>
+      <p><strong>Le fix&nbsp;:</strong> passer le nombre de morceaux r&eacute;cup&eacute;r&eacute;s (TOP_K) de 10 &agrave; 15. <strong>1 ligne de code, 1 param&egrave;tre.</strong></p>
+      <p><strong>2e passage&nbsp;:</strong> G2 = 100% (4/4). Z&eacute;ro r&eacute;gression sur les autres questions. &rarr; <strong>CONDITIONAL GO</strong> (0 BLOCKING fail, 1 SIGNAL fail sur la latence).</p>
+      <p><strong>La le&ccedil;on&nbsp;:</strong> sans &eacute;valuation rigoureuse, ce bug serait pass&eacute; inaper&ccedil;u. Le produit aurait donn&eacute; des r&eacute;ponses fausses sans que personne ne le sache.</p>
+    </div>
+  </div>
+
+  <!-- 12. LE PITCH -->
+  <div class="section">
+    <div class="section-number">12</div>
+    <h2>Le pitch interview &mdash; 45 secondes</h2>
+
+    <div class="pitch-box">
+      <p>&laquo;&nbsp;J'ai construit DocuQuery AI, un <strong>syst&egrave;me RAG</strong> pour interroger des documents en langage naturel.</p>
+      <p>Le probl&egrave;me&nbsp;: quand tu as un document propri&eacute;taire, m&ecirc;me avec les LLM r&eacute;cents et leurs grandes fen&ecirc;tres de contexte, <strong>trois probl&egrave;mes restent</strong> &mdash; la pr&eacute;cision se d&eacute;grade sur les longs textes, &ccedil;a co&ucirc;te cher en tokens, et tu n'as aucune citation v&eacute;rifiable.</p>
+      <p>RAG r&eacute;sout &ccedil;a&nbsp;: je d&eacute;coupe le document en <strong>chunks</strong>, je les transforme en <strong>embeddings</strong>, et quand tu poses une question, je retrouve les <strong>15 passages les plus pertinents</strong> par similarit&eacute; cosinus. Le LLM r&eacute;pond uniquement &agrave; partir de ces passages, avec <strong>page et paragraphe</strong> en citation.</p>
+      <p>Le tout tourne sur <strong>FastAPI d&eacute;ploy&eacute; sur Render</strong> &agrave; $7/mois, avec un frontend React sur Lovable. 5 modules Python ind&eacute;pendants, ~300 lignes, pipeline from scratch &mdash; pas de LangChain.</p>
+      <p><strong>87.5%</strong> de pr&eacute;cision, <strong>z&eacute;ro hallucination</strong>, <strong>100%</strong> sur les questions factuelles. Mon premier eval a donn&eacute; un <strong>NO-GO</strong> &mdash; pr&eacute;cision factuelle &agrave; 75%, mon seuil BLOCKING &eacute;tait &agrave; 100%. Fix d'une ligne. &Ccedil;a m'a confirm&eacute;&nbsp;: <strong>sans &eacute;valuation rigoureuse, on shippe des produits AI cass&eacute;s sans le savoir.</strong>&nbsp;&raquo;</p>
+    </div>
+  </div>
+
+  <!-- 13. CONCEPTS -->
+  <div class="section section-page-break">
+    <div class="section-number">13</div>
+    <h2>Concepts &mdash; si on te demande</h2>
+
+    <table class="concepts-table">
+      <thead><tr><th>Concept</th><th>C'est quoi</th><th>Exemple concret</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Fen&ecirc;tre de contexte</td>
+          <td>Quantit&eacute; max de texte qu'un LLM lit en une fois</td>
+          <td>GPT-4 = 128K tokens, Claude = 200K tokens</td>
+        </tr>
+        <tr>
+          <td>Lost in the middle</td>
+          <td>Le LLM traite bien le d&eacute;but et la fin, rate l'info au milieu du texte</td>
+          <td>Ton chiffre cl&eacute; est page 35/60 &rarr; risque qu'il passe &agrave; c&ocirc;t&eacute;</td>
+        </tr>
+        <tr>
+          <td>Hallucination</td>
+          <td>Le LLM invente des faits plausibles quand il n'a pas l'info</td>
+          <td>&laquo;&nbsp;Le budget est de 12M&nbsp;&raquo; &mdash; chiffre qui n'existe nulle part</td>
+        </tr>
+        <tr>
+          <td>Embedding</td>
+          <td>Liste de 1536 nombres qui capture le sens d'un texte. Comme des coordonn&eacute;es GPS en 1536 dimensions.</td>
+          <td>&laquo;&nbsp;co&ucirc;t d'acquisition&nbsp;&raquo; &asymp; &laquo;&nbsp;combien pour acqu&eacute;rir un client&nbsp;&raquo;</td>
+        </tr>
+        <tr>
+          <td>Cosine similarity</td>
+          <td>Mesure si 2 vecteurs pointent dans la m&ecirc;me direction (= m&ecirc;me sujet)</td>
+          <td>1.0 = m&ecirc;me sens, 0 = rien &agrave; voir</td>
+        </tr>
+        <tr>
+          <td>Lexical vs s&eacute;mantique</td>
+          <td>Lexical = cherche les mots exacts. S&eacute;mantique = comprend le sens.</td>
+          <td>Ctrl+F = lexical. Embedding search = s&eacute;mantique.</td>
+        </tr>
+        <tr>
+          <td>TOP_K</td>
+          <td>Nombre de chunks r&eacute;cup&eacute;r&eacute;s par la recherche. Param&egrave;tre ajustable, pas un standard.</td>
+          <td>DocuQuery = 15. En entreprise &rarr; d&eacute;pend du corpus.</td>
+        </tr>
+        <tr>
+          <td>Re-ranking</td>
+          <td>Deuxi&egrave;me mod&egrave;le qui reclasse les chunks par pertinence apr&egrave;s la recherche initiale</td>
+          <td>Utilis&eacute; en production enterprise pour optimiser TOP_K</td>
+        </tr>
+        <tr>
+          <td>FastAPI</td>
+          <td>Framework Python pour cr&eacute;er des APIs. Tu d&eacute;finis des routes (&laquo;&nbsp;quand quelqu'un appelle <code>/upload</code>, fais &ccedil;a&nbsp;&raquo;), FastAPI g&egrave;re la validation, les erreurs, et la doc auto.</td>
+          <td><code>@app.post("/upload")</code> cr&eacute;e une route qui accepte des fichiers</td>
+        </tr>
+        <tr>
+          <td>Uvicorn</td>
+          <td>Le serveur qui fait tourner FastAPI. FastAPI d&eacute;finit le comportement (&laquo;&nbsp;si on appelle /upload, fais &ccedil;a&nbsp;&raquo;), mais il ne sait pas &eacute;couter Internet tout seul. Uvicorn est le programme qui ouvre un port r&eacute;seau, re&ccedil;oit les requ&ecirc;tes HTTP, et les transmet &agrave; FastAPI. C'est comme un standardiste t&eacute;l&eacute;phonique&nbsp;: il d&eacute;croche les appels et les passe au bon service. Sans lui, FastAPI existe mais personne ne peut le contacter.</td>
+          <td><code>uvicorn api:app --port 8000</code> = &laquo;&nbsp;&eacute;coute le port 8000 et passe tout &agrave; FastAPI&nbsp;&raquo;</td>
+        </tr>
+        <tr>
+          <td>Render</td>
+          <td>Plateforme cloud (comme Heroku). Tu push du code sur GitHub, Render le d&eacute;tecte, l'installe et le met en ligne automatiquement.</td>
+          <td>Push sur <code>main</code> &rarr; backend live en 2 minutes</td>
+        </tr>
+        <tr>
+          <td>Lovable</td>
+          <td>Outil no-code qui g&eacute;n&egrave;re du React + Tailwind via des prompts en langage naturel</td>
+          <td>&laquo;&nbsp;Ajoute un stepper qui dit Reading your document&nbsp;&raquo; &rarr; code React g&eacute;n&eacute;r&eacute;</td>
+        </tr>
+        <tr>
+          <td>CORS</td>
+          <td>Protection navigateur&nbsp;: un site web ne peut pas appeler un serveur sur un autre domaine sans permission. CORS est la liste blanche qui autorise certains frontends &agrave; appeler le backend.</td>
+          <td><code>lovable.app</code> veut appeler <code>onrender.com</code> &rarr; le backend doit l'autoriser</td>
+        </tr>
+        <tr>
+          <td>Adapter pattern</td>
+          <td>Un traducteur entre deux formats incompatibles. Les 5 modules RAG ont &eacute;t&eacute; &eacute;crits pour Streamlit (le premier frontend local). Quand on est pass&eacute; &agrave; FastAPI, le format des fichiers upload&eacute;s a chang&eacute;. Au lieu de r&eacute;&eacute;crire les 5 modules, on a cr&eacute;&eacute; un traducteur qui convertit le nouveau format vers l'ancien. <strong>R&eacute;sultat&nbsp;: 0 changement dans les modules RAG.</strong></td>
+          <td>FastAPI envoie un <code>UploadFile</code>, les modules attendent <code>.name</code> et <code>.read()</code>. L'adapter traduit l'un vers l'autre.</td>
+        </tr>
+        <tr>
+          <td>Multipart/form-data</td>
+          <td>Le format standard pour envoyer un fichier via le web. C'est comme un email avec une pi&egrave;ce jointe&nbsp;: le navigateur envoie une requ&ecirc;te qui contient &agrave; la fois des infos (le nom du fichier) et les donn&eacute;es brutes du fichier. C'est ce format que <code>/upload</code> attend.</td>
+          <td>Tu cliques &laquo;&nbsp;Upload&nbsp;&raquo; &rarr; le navigateur emballe le PDF et l'envoie au serveur</td>
+        </tr>
+        <tr>
+          <td>Single-tenant</td>
+          <td>Un seul utilisateur/document &agrave; la fois. Pas de sessions, pas de multi-utilisateurs. Choix de prototype.</td>
+          <td>Upload = efface le document pr&eacute;c&eacute;dent</td>
+        </tr>
+        <tr>
+          <td>Stateless</td>
+          <td>Le serveur ne persiste rien sur disque. Red&eacute;marrage = donn&eacute;es perdues.</td>
+          <td>Render restart &rarr; l'utilisateur doit r&eacute;-uploader son document</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 14. QUESTIONS TEST -->
+  <div class="section">
+    <div class="section-number">14</div>
+    <h2>Questions test &mdash; r&eacute;pondre sans regarder</h2>
+
+    <ol class="questions-list">
+      <li>Dessine le sch&eacute;ma d'architecture&nbsp;: quelles sont les 3 couches et comment elles communiquent&nbsp;?</li>
+      <li>Quels sont les 3 endpoints de l'API&nbsp;? Que re&ccedil;oit et retourne chacun&nbsp;?</li>
+      <li>C'est quoi CORS&nbsp;? Pourquoi c'&eacute;tait un probl&egrave;me avec Lovable&nbsp;?</li>
+      <li>Explique le parcours complet d'un fichier PDF de l'upload &agrave; &laquo;&nbsp;ready&nbsp;&raquo;</li>
+      <li>Pourquoi le backend est single-tenant&nbsp;? Qu'est-ce que &ccedil;a implique&nbsp;?</li>
+      <li>Pourquoi ChromaDB a &eacute;t&eacute; remplac&eacute; par numpy&nbsp;? Quel &eacute;tait le probl&egrave;me&nbsp;?</li>
+      <li>C'est quoi l'adapter pattern dans <code>api.py</code>&nbsp;? Pourquoi il existe&nbsp;?</li>
+      <li>C'est quoi Uvicorn&nbsp;? Quel est son r&ocirc;le par rapport &agrave; FastAPI&nbsp;?</li>
+      <li>Pourquoi Python 3.11 et pas la derni&egrave;re version&nbsp;?</li>
+      <li>Explique le pipeline RAG en 5 &eacute;tapes &agrave; quelqu'un qui conna&icirc;t les LLM mais pas le RAG</li>
+      <li>C'est quoi un embedding concr&egrave;tement&nbsp;? Pourquoi 1536 dimensions&nbsp;?</li>
+      <li>Pourquoi TOP_K = 15&nbsp;? Est-ce un standard&nbsp;?</li>
+      <li>Comment les citations fonctionnent &mdash; du parsing jusqu'aux marqueurs [P1]&nbsp;?</li>
+      <li>Quelle est la diff&eacute;rence entre le flux Upload et le flux Query&nbsp;? Combien d'appels &agrave; OpenAI dans chaque cas&nbsp;?</li>
+      <li>Pourquoi la pr&eacute;cision factuelle est BLOCKING &agrave; 100% et pas QUALITY&nbsp;?</li>
+      <li>C'est quoi G6 (Consistance)&nbsp;? Pourquoi c'est important&nbsp;?</li>
+      <li>Raconte le NO-GO &rarr; CONDITIONAL GO en 30 secondes</li>
+      <li>C'est quoi un golden dataset et pourquoi on pose toujours les m&ecirc;mes 12 questions&nbsp;?</li>
+    </ol>
+  </div>
+
+  <!-- 15. RÉPONSES -->
+  <div class="section section-page-break">
+    <div class="section-number">15</div>
+    <h2>R&eacute;ponses &mdash; v&eacute;rifie tes r&eacute;ponses</h2>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">1</div>
+        <div class="step-detail-title">Dessine le sch&eacute;ma d'architecture</div>
+      </div>
+      <div class="step-detail-body">
+        <p><strong>3 couches&nbsp;:</strong> Frontend (React/Tailwind sur Lovable) &rarr; Backend (FastAPI sur Render) &rarr; OpenAI API. Plus le numpy store en dessous du backend.</p>
+        <p><strong>Communication&nbsp;:</strong> Frontend &harr; Backend en HTTPS (requ&ecirc;tes + r&eacute;ponses JSON). Backend &harr; OpenAI en HTTPS (embeddings + g&eacute;n&eacute;ration). Le frontend ne parle jamais &agrave; OpenAI directement. numpy store = 2 variables Python en RAM, reli&eacute;es au backend en interne (pas de r&eacute;seau).</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">2</div>
+        <div class="step-detail-title">Les 3 endpoints de l'API</div>
+      </div>
+      <div class="step-detail-body">
+        <p><strong><code>GET /health</code></strong> &rarr; re&ccedil;oit rien, retourne <code>{"status": "ok"}</code>. V&eacute;rifie que le serveur tourne.</p>
+        <p><strong><code>POST /upload</code></strong> &rarr; re&ccedil;oit un fichier (PDF, TXT ou CSV, max 10 MB), ex&eacute;cute parse &rarr; chunk &rarr; embed &rarr; store, retourne <code>{"num_chunks": 48, "status": "ready"}</code>.</p>
+        <p><strong><code>POST /query</code></strong> &rarr; re&ccedil;oit <code>{"question": "..."}</code>, embed la question &rarr; cherche 15 chunks &rarr; envoie au LLM, retourne <code>{"answer": "...", "latency": 2.3, "sources": [...]}</code>.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">3</div>
+        <div class="step-detail-title">C'est quoi CORS&nbsp;? Pourquoi c'&eacute;tait un probl&egrave;me avec Lovable&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p><strong>CORS</strong> = protection du navigateur. Par d&eacute;faut, un site web ne peut pas appeler un serveur sur un autre domaine. CORS est la liste blanche c&ocirc;t&eacute; backend qui dit &laquo;&nbsp;ce frontend a le droit de m'appeler&nbsp;&raquo;.</p>
+        <p><strong>Le probl&egrave;me Lovable&nbsp;:</strong> Lovable utilise 2 domaines diff&eacute;rents &mdash; <code>*.lovableproject.com</code> en dev et <code>*.lovable.app</code> en production. La config initiale ne couvrait qu'un seul &rarr; &ccedil;a marchait en dev mais cassait en prod. Fix&nbsp;: une regex qui couvre les deux domaines d'un coup.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">4</div>
+        <div class="step-detail-title">Parcours complet d'un PDF de l'upload &agrave; &laquo;&nbsp;ready&nbsp;&raquo;</div>
+      </div>
+      <div class="step-detail-body">
+        <p>L'utilisateur clique Upload &rarr; le navigateur emballe le PDF en multipart/form-data et l'envoie en POST &agrave; <code>/upload</code> &rarr; le backend v&eacute;rifie la taille (&gt;10 MB = rejet&eacute;, HTTP 413) &rarr; l'adapter traduit le format FastAPI vers le format attendu par le parser &rarr; <strong>PARSE</strong>&nbsp;: pdfplumber extrait le texte page par page et enregistre les positions de chaque page &rarr; <strong>CHUNK</strong>&nbsp;: d&eacute;coupage en blocs de 500 tokens avec 100 tokens de chevauchement &rarr; <strong>EMBED</strong>&nbsp;: chaque chunk est envoy&eacute; &agrave; OpenAI (text-embedding-3-small) par batchs de 50, qui retourne des vecteurs de 1536 nombres &rarr; <strong>STORE</strong>&nbsp;: les chunks + vecteurs sont stock&eacute;s en RAM (numpy) &rarr; r&eacute;ponse JSON <code>{"status": "ready"}</code>.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">5</div>
+        <div class="step-detail-title">Pourquoi single-tenant&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p>Le backend ne garde qu'un seul document en m&eacute;moire &agrave; la fois. Si quelqu'un d'autre upload un fichier, le pr&eacute;c&eacute;dent est effac&eacute;. Si le serveur red&eacute;marre, tout est perdu.</p>
+        <p><strong>Pourquoi ce choix&nbsp;:</strong> c'est un prototype. Pas de base de donn&eacute;es, pas de sessions, pas de multi-utilisateurs. &Ccedil;a simplifie tout &mdash; z&eacute;ro gestion d'&eacute;tat persistant. Le but est de prouver que le pipeline RAG fonctionne, pas de g&eacute;rer 10,000 utilisateurs.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">6</div>
+        <div class="step-detail-title">Pourquoi ChromaDB remplac&eacute; par numpy&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p><strong>Le probl&egrave;me&nbsp;:</strong> ChromaDB utilise SQLite en interne. SQLite ne supporte pas les dossiers synchronis&eacute;s iCloud (conflit de verrous fichiers). R&eacute;sultat&nbsp;: crash au d&eacute;marrage.</p>
+        <p><strong>La solution&nbsp;:</strong> numpy &mdash; ~50 lignes de code. 2 variables en RAM (les chunks + leurs vecteurs). La recherche est un produit scalaire normalis&eacute; (similarit&eacute; cosinus) calcul&eacute; en brute force. Pour ~240 chunks (1 document), &ccedil;a prend &lt;1ms. Pas besoin d'index optimis&eacute; &agrave; cette &eacute;chelle.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">7</div>
+        <div class="step-detail-title">C'est quoi l'adapter pattern dans api.py&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p>Les 5 modules RAG ont &eacute;t&eacute; &eacute;crits pour Streamlit (le premier frontend local). Streamlit envoie un objet avec <code>.name</code> et <code>.read()</code>. Quand on est pass&eacute; &agrave; FastAPI, le format a chang&eacute; (<code>.filename</code> au lieu de <code>.name</code>, m&eacute;thodes async).</p>
+        <p><strong>Au lieu de r&eacute;&eacute;crire les 5 modules</strong>, on a cr&eacute;&eacute; un &laquo;&nbsp;traducteur&nbsp;&raquo; (<code>_UploadFileAdapter</code>) qui convertit le format FastAPI vers le format attendu. R&eacute;sultat&nbsp;: <strong>0 changement dans les modules RAG</strong>.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">8</div>
+        <div class="step-detail-title">C'est quoi Uvicorn&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p>FastAPI d&eacute;finit le comportement (&laquo;&nbsp;si on appelle <code>/upload</code>, fais &ccedil;a&nbsp;&raquo;), mais il ne sait pas &eacute;couter Internet tout seul. Uvicorn est le programme qui ouvre un port r&eacute;seau, re&ccedil;oit les requ&ecirc;tes HTTP, et les transmet &agrave; FastAPI.</p>
+        <p><strong>Analogie&nbsp;:</strong> Uvicorn = standardiste t&eacute;l&eacute;phonique. Il d&eacute;croche les appels et les passe au bon service (FastAPI). Sans lui, FastAPI existe mais personne ne peut le contacter.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">9</div>
+        <div class="step-detail-title">Pourquoi Python 3.11&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p>tiktoken (le tokenizer qui d&eacute;coupe le texte en tokens) ne supportait pas Python 3.14 au moment du build. Pin explicite &agrave; 3.11 dans la config Render pour &eacute;viter le probl&egrave;me.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">10</div>
+        <div class="step-detail-title">Le pipeline RAG en 5 &eacute;tapes</div>
+      </div>
+      <div class="step-detail-body">
+        <p><strong>PARSE</strong>&nbsp;: extraire le texte brut du fichier (PDF page par page, CSV en phrases, TXT direct). On enregistre o&ugrave; commence chaque page pour les citations.</p>
+        <p><strong>CHUNK</strong>&nbsp;: d&eacute;couper en blocs de 500 tokens (~375 mots) avec 100 tokens de chevauchement pour ne jamais couper une id&eacute;e en deux.</p>
+        <p><strong>EMBED</strong>&nbsp;: envoyer chaque bloc &agrave; OpenAI qui le transforme en vecteur (liste de 1536 nombres capturant le sens). C'est un appel r&eacute;seau, pas un calcul local.</p>
+        <p><strong>SEARCH</strong>&nbsp;: transformer la question en vecteur, comparer avec tous les vecteurs stock&eacute;s (similarit&eacute; cosinus), garder les 15 plus proches. Calcul numpy en &lt;1ms.</p>
+        <p><strong>GENERATE</strong>&nbsp;: envoyer les 15 blocs + la question &agrave; GPT-4o-mini (mod&egrave;le diff&eacute;rent de celui des embeddings). Le LLM r&eacute;pond uniquement depuis ces passages, avec citations page + paragraphe.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">11</div>
+        <div class="step-detail-title">C'est quoi un embedding&nbsp;? Pourquoi 1536&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p>Un embedding, c'est une <strong>liste ordonn&eacute;e de nombres d&eacute;cimaux</strong> qui capture le sens d'un texte. Exemple&nbsp;: <code>[0.023, -0.041, 0.089, ..., 0.012]</code>.</p>
+        <p><strong>Analogie&nbsp;:</strong> comme des coordonn&eacute;es GPS, mais au lieu de 2 dimensions (latitude, longitude), on a 1536 dimensions pour capturer toutes les nuances de sens. Deux textes qui parlent du m&ecirc;me sujet auront des coordonn&eacute;es proches, m&ecirc;me s'ils n'utilisent aucun mot en commun.</p>
+        <p><strong>Pourquoi 1536&nbsp;:</strong> c'est la taille fix&eacute;e par le mod&egrave;le text-embedding-3-small d'OpenAI. On ne choisit pas ce nombre &mdash; c'est le mod&egrave;le qui d&eacute;cide combien de dimensions il a besoin pour repr&eacute;senter le sens.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">12</div>
+        <div class="step-detail-title">Pourquoi TOP_K = 15&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p><strong>Ce n'est PAS un standard.</strong> C'est un param&egrave;tre qu'on ajuste selon le projet. J'ai commenc&eacute; &agrave; 5, puis 10, puis 15.</p>
+        <p>&Agrave; 10, une question factuelle &eacute;chouait&nbsp;: le chunk contenant le bon chiffre (page 13) n'&eacute;tait pas r&eacute;cup&eacute;r&eacute;. Un chunk diff&eacute;rent (page 45, test de charge) &eacute;tait s&eacute;mantiquement plus proche de la question. Passer &agrave; 15 a r&eacute;solu le probl&egrave;me &mdash; on ratisse plus large, donc plus de chances de capturer le bon passage.</p>
+        <p><strong>Trade-off&nbsp;:</strong> plus de chunks = plus de contexte pour le LLM = l&eacute;g&egrave;rement plus cher et plus lent. Mais pour un seul document, 15 chunks c'est n&eacute;gligeable.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">13</div>
+        <div class="step-detail-title">Comment fonctionnent les citations&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p><strong>&Eacute;tape 1 (PARSE)&nbsp;:</strong> quand on extrait le texte d'un PDF, on enregistre o&ugrave; commence et finit chaque page (page 1 = caract&egrave;res 0 &agrave; 2400, page 2 = 2401 &agrave; 4800...).</p>
+        <p><strong>&Eacute;tape 2 (CHUNK)&nbsp;:</strong> chaque chunk sait &agrave; quelles pages il appartient gr&acirc;ce &agrave; ces positions.</p>
+        <p><strong>&Eacute;tape 5 (GENERATE)&nbsp;:</strong> avant d'envoyer les chunks au LLM, on ajoute des marqueurs <strong>[P1]</strong>, <strong>[P2]</strong>, etc. au d&eacute;but de chaque paragraphe dans le chunk. Le LLM peut alors citer &laquo;&nbsp;Page 22, Paragraphe 3&nbsp;&raquo; au lieu de juste &laquo;&nbsp;Page 22&nbsp;&raquo;.</p>
+        <p>Le system prompt oblige aussi le LLM &agrave; citer chaque fait. S'il ne peut pas citer &rarr; il ne doit pas affirmer.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">14</div>
+        <div class="step-detail-title">Flux Upload vs Query &mdash; appels OpenAI</div>
+      </div>
+      <div class="step-detail-body">
+        <p><strong>Upload (1 appel OpenAI)&nbsp;:</strong> le fichier arrive au backend &rarr; PARSE &rarr; CHUNK &rarr; EMBED (appel &agrave; text-embedding-3-small pour transformer les chunks en vecteurs) &rarr; STORE en RAM. Pas de r&eacute;ponse g&eacute;n&eacute;r&eacute;e, pas de GPT-4o-mini. Le backend r&eacute;pond &laquo;&nbsp;ready&nbsp;&raquo;.</p>
+        <p><strong>Query (2 appels OpenAI)&nbsp;:</strong> la question arrive &rarr; <strong>appel 1</strong>&nbsp;: embed la question (text-embedding-3-small) &rarr; SEARCH (numpy, local, &lt;1ms) &rarr; <strong>appel 2</strong>&nbsp;: envoie les 15 chunks + question &agrave; GPT-4o-mini qui r&eacute;dige la r&eacute;ponse avec citations.</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">15</div>
+        <div class="step-detail-title">Pourquoi la pr&eacute;cision factuelle est BLOCKING &agrave; 100%&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p>Parce qu'une erreur sur un fait pur (un chiffre, un nom, une date) d&eacute;truit la confiance dans le produit. Si le syst&egrave;me dit &laquo;&nbsp;le budget est de 12M&nbsp;&raquo; alors que c'est 18.5M, l'utilisateur ne peut plus rien croire.</p>
+        <p>Les questions factuelles sont les plus simples &mdash; un chiffre pr&eacute;cis qui existe dans le document. Si le syst&egrave;me &eacute;choue l&agrave;-dessus, il &eacute;chouera partout. C'est le plancher, pas le plafond. D'o&ugrave; BLOCKING (non-n&eacute;gociable) et pas QUALITY (configurable).</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">16</div>
+        <div class="step-detail-title">C'est quoi G6 (Consistance)&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p>On repose exactement la m&ecirc;me question &agrave; deux moments diff&eacute;rents (E1 et E12 dans le golden dataset). Les <strong>faits</strong> doivent &ecirc;tre identiques &mdash; le wording peut varier, mais les chiffres et noms doivent &ecirc;tre les m&ecirc;mes.</p>
+        <p><strong>Pourquoi c'est important&nbsp;:</strong> un syst&egrave;me qui dit &laquo;&nbsp;$3,600&nbsp;&raquo; puis &laquo;&nbsp;$4,200&nbsp;&raquo; pour la m&ecirc;me question est inutilisable en contexte professionnel. La consistance garantit que le syst&egrave;me est fiable, pas juste chanceux.</p>
+        <p><strong>R&eacute;sultat DocuQuery&nbsp;:</strong> PASS &mdash; les deux r&eacute;ponses donnent $3,600 avec les m&ecirc;mes d&eacute;tails (LTV:CAC 8.7:1).</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">17</div>
+        <div class="step-detail-title">Le NO-GO &rarr; CONDITIONAL GO en 30 secondes</div>
+      </div>
+      <div class="step-detail-body">
+        <p>&laquo;&nbsp;Premier eval&nbsp;: pr&eacute;cision factuelle &agrave; 75%, mon seuil BLOCKING &eacute;tait &agrave; 100%. NO-GO. Une question demandait les TPS au lancement &mdash; le syst&egrave;me trouvait 1,000 TPS (test de charge, page 45) au lieu de 10,000 TPS (spec fonctionnelle, page 13). Le chunk &eacute;tait s&eacute;mantiquement plus proche de &laquo;&nbsp;au lancement&nbsp;&raquo; mais factuellement faux. Fix&nbsp;: TOP_K de 10 &agrave; 15, une seule ligne. Deuxi&egrave;me eval&nbsp;: 100% factuel, z&eacute;ro r&eacute;gression. CONDITIONAL GO &mdash; le seul fail restant est la latence, une d&eacute;pendance externe.&nbsp;&raquo;</p>
+      </div>
+    </div>
+
+    <div class="step-detail">
+      <div class="step-detail-header">
+        <div class="step-detail-number">18</div>
+        <div class="step-detail-title">C'est quoi un golden dataset&nbsp;?</div>
+      </div>
+      <div class="step-detail-body">
+        <p>Un ensemble fixe de questions avec les r&eacute;ponses attendues, pr&eacute;par&eacute;es &agrave; l'avance. On pose <strong>toujours les m&ecirc;mes questions</strong> &agrave; chaque version du produit.</p>
+        <p><strong>Pourquoi&nbsp;:</strong> si tu changes les questions &agrave; chaque test, tu ne sais pas si une am&eacute;lioration vient du code ou de la difficult&eacute; des questions. Le golden dataset = un examen standardis&eacute; qui rend la comparaison fiable.</p>
+        <p><strong>Composition DocuQuery (12 questions)&nbsp;:</strong> 4 factuelles (chiffre pr&eacute;cis), 3 multi-hop (croiser plusieurs pages), 2 synth&egrave;se (r&eacute;sumer), 2 adversariales (l'info n'existe pas &mdash; le syst&egrave;me doit refuser), 1 consistance (re-poser E1 pour v&eacute;rifier).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    DocuQuery AI &middot; Product Mastery Card &middot; The Builder PM Method &middot; Mehdi Bargach 2026
+  </div>
+
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme-docuquery', next);
+    updateToggle(next);
+  }
+  function updateToggle(t) {
+    document.getElementById('theme-icon').innerHTML = t === 'dark' ? '&#9788;' : '&#9790;';
+    document.getElementById('theme-label').textContent = t === 'dark' ? 'Light' : 'Dark';
+  }
+  const saved = localStorage.getItem('theme-docuquery') || 'dark';
+  if (saved !== 'dark') document.documentElement.setAttribute('data-theme', 'light');
+  updateToggle(saved);
+</script>
+
+</body>
+</html>

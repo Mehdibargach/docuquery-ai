@@ -201,7 +201,9 @@ For TXT files, `page_map` and `chunks` are `None` (the defaults). The text goes 
 
 ### What is a PDF, really?
 
-A PDF (Portable Document Format) is not a text file. It's a complex binary format created by Adobe in 1993, designed to display documents identically on any device. Inside a PDF, text is stored as a series of **drawing instructions**: "Draw the character 'H' at position (72, 720) using Helvetica 12pt." The text isn't stored as a continuous string — it's scattered across the file as individual characters placed at specific coordinates.
+PDFs aren't plain text — they're designed for printing, not reading by software. Text is stored as drawing commands ("draw the letter H at position 72, 720"), not as readable text. That's why we need a special library (pdfplumber) to decode these commands back into words we can work with.
+
+More precisely: a PDF (Portable Document Format) is a complex binary format created by Adobe in 1993, designed to display documents identically on any device. Inside a PDF, text is stored as a series of **drawing instructions**: "Draw the character 'H' at position (72, 720) using Helvetica 12pt." The text isn't stored as a continuous string — it's scattered across the file as individual characters placed at specific coordinates.
 
 This is why you can't just `read().decode("utf-8")` a PDF. You need a library that understands the PDF structure, reads the drawing instructions, and reassembles the characters into readable text.
 
@@ -216,7 +218,7 @@ There are several Python libraries for PDF text extraction. Here's how they comp
 | pymupdf (fitz) | Excellent | Yes | Requires C extension compilation | **AGPL** | Yes |
 | pdfminer | Good | Yes (but complex API) | `pip install` (pure Python) | MIT | Yes |
 
-**pdfplumber wins** for four reasons:
+**pdfplumber wins** for four reasons. Notice that the choice isn't about "which library extracts text best" — it's a PM trade-off between quality, risk, and maintenance cost:
 
 1. **Pure Python** — no C extensions to compile. pymupdf requires compiling C code, which fails on some systems (especially M1/M2 Macs with certain Xcode versions). pdfplumber installs cleanly with `pip install` everywhere.
 
@@ -226,7 +228,7 @@ There are several Python libraries for PDF text extraction. Here's how they comp
 
 4. **Accepts BytesIO** — Streamlit's file uploader provides a file-like object in memory, not a file on disk. pdfplumber's `open()` function accepts these in-memory objects directly. Some libraries require saving to a temporary file first.
 
-**Why not the best quality (pymupdf)?** pymupdf produces slightly better text extraction for complex layouts (multi-column, tables), but the license and installation issues outweigh the quality gain for a Walking Skeleton. If text quality becomes an issue in EVALUATE, switching to pymupdf is a one-function change (just replace `_parse_pdf`).
+**Why not the best quality (pymupdf)?** pymupdf produces slightly better text extraction for complex layouts (multi-column, tables), but the license and installation issues outweigh the quality gain for a Walking Skeleton. This is a classic PM trade-off: the technically "best" option carries legal and operational risks that make it the wrong choice for this context. If text quality becomes an issue in EVALUATE, switching to pymupdf is a one-function change (just replace `_parse_pdf`) — and by then, we'll have data to justify the trade-off.
 
 ### How the parsing works, line by line
 
@@ -340,6 +342,8 @@ If you feed this raw text into an embedding model, it produces a mediocre vector
 Think of it this way: if you asked a librarian to find information about "a feature with many users," they'd need the data presented as "Smart Search has 12,500 users" — not as a raw line of comma-separated values. Embedding models work the same way: they understand **natural language** far better than structured data formats.
 
 ### The solution: prose conversion
+
+So the fix is straightforward: don't feed the model raw CSV. Convert the data into sentences first. Feeding it raw CSV (just commas and numbers) produces weak embeddings because the model can't tell which number is a user count and which is a satisfaction score. By converting each row to a sentence like "Smart Search has 12,500 users and a satisfaction score of 4.2", the model understands what the data actually means — and can match it to questions about user counts, satisfaction, or feature performance.
 
 We convert each row into a natural language sentence:
 
