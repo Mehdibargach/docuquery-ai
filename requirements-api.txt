@@ -1,18 +1,18 @@
 # API Framework
-fastapi
-uvicorn[standard]
-python-multipart
+fastapi>=0.110.0,<1.0
+uvicorn[standard]>=0.29.0,<1.0
+python-multipart>=0.0.7,<1.0
 
 # LLM & AI
-openai
+openai>=1.30.0,<2.0
 
 # Document Processing
-pdfplumber
-tiktoken
+pdfplumber>=0.10.0,<1.0
+tiktoken>=0.7.0,<1.0
 
 # Vector Store (numpy-based)
-numpy
+numpy>=1.24.0,<2.0
 
 # Utilities
-python-dotenv
-pydantic
+python-dotenv>=1.0.0,<2.0
+pydantic>=2.5.0,<3.0

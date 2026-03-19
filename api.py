@@ -2,7 +2,9 @@
 
 import io
 import logging
+import os
 import time
+import traceback
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,6 +20,12 @@ from rag.generator import generate_answer
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
+# --- Startup validation ---
+_openai_key = os.environ.get("OPENAI_API_KEY", "")
+if not _openai_key:
+    logger.error("OPENAI_API_KEY is not set — the API will not be able to process documents.")
 
 MAX_FILE_SIZE_MB = 10
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
@@ -64,11 +72,15 @@ class _UploadFileAdapter:
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "version": "1.0"}
+    has_key = bool(os.environ.get("OPENAI_API_KEY"))
+    return {"status": "ok" if has_key else "degraded", "version": "1.0", "openai_key_set": has_key}
 
 
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
+    if not os.environ.get("OPENAI_API_KEY"):
+        raise HTTPException(status_code=503, detail="Service unavailable: OPENAI_API_KEY not configured.")
+
     # Read file with size limit to prevent memory exhaustion
     content = await file.read()
     if len(content) > MAX_FILE_SIZE_BYTES:
@@ -78,76 +90,92 @@ async def upload(file: UploadFile = File(...)):
         )
 
     logger.info("Upload: %s (%.1f KB)", file.filename, len(content) / 1024)
-    adapted = _UploadFileAdapter(file.filename, content)
 
-    result = parse_file(adapted)
-    if result is None:
-        ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else "unknown"
-        raise HTTPException(status_code=400, detail=f"Unsupported file format: .{ext}")
+    try:
+        adapted = _UploadFileAdapter(file.filename, content)
 
-    if result.file_type == "pdf" and len(result.text.strip()) < 100:
-        pass  # scanned PDF warning — frontend will handle
+        result = parse_file(adapted)
+        if result is None:
+            ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else "unknown"
+            raise HTTPException(status_code=400, detail=f"Unsupported file format: .{ext}")
 
-    clear()
+        if result.file_type == "pdf" and len(result.text.strip()) < 100:
+            pass  # scanned PDF warning — frontend will handle
 
-    if result.file_type == "csv":
-        chunks = result.chunks
-    else:
-        chunks = chunk_text(
-            result.text, result.filename,
-            file_type=result.file_type,
-            page_map=result.page_map,
-        )
+        clear()
 
-    if not chunks:
-        raise HTTPException(status_code=400, detail="File appears to be empty or contains no extractable text.")
+        if result.file_type == "csv":
+            chunks = result.chunks
+        else:
+            chunks = chunk_text(
+                result.text, result.filename,
+                file_type=result.file_type,
+                page_map=result.page_map,
+            )
 
-    chunk_texts = [c["text"] for c in chunks]
-    embeddings = embed_texts(chunk_texts)
-    add_chunks(chunks, embeddings)
+        if not chunks:
+            raise HTTPException(status_code=400, detail="File appears to be empty or contains no extractable text.")
 
-    logger.info("Ready: %d chunks, %d embeddings", len(chunks), len(embeddings))
+        chunk_texts = [c["text"] for c in chunks]
+        embeddings = embed_texts(chunk_texts)
+        add_chunks(chunks, embeddings)
 
-    return {
-        "filename": result.filename,
-        "file_type": result.file_type,
-        "num_chunks": len(chunks),
-        "status": "ready",
-    }
+        logger.info("Ready: %d chunks, %d embeddings", len(chunks), len(embeddings))
+
+        return {
+            "filename": result.filename,
+            "file_type": result.file_type,
+            "num_chunks": len(chunks),
+            "status": "ready",
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Upload failed: %s\n%s", str(e), traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Processing error: {str(e)}")
 
 
 @app.post("/query")
 def query_document(req: QueryRequest):
-    q_embedding = embed_query(req.question)
+    if not os.environ.get("OPENAI_API_KEY"):
+        raise HTTPException(status_code=503, detail="Service unavailable: OPENAI_API_KEY not configured.")
 
-    t0 = time.time()
-    results = query(q_embedding)
-    answer = generate_answer(req.question, results)
-    latency = time.time() - t0
+    try:
+        q_embedding = embed_query(req.question)
 
-    sources = []
-    for meta in results["metadatas"][0]:
-        source = {
-            "chunk_index": meta.get("chunk_index"),
-            "page_start": meta.get("page_start"),
-            "page_end": meta.get("page_end"),
-            "row_start": meta.get("row_start"),
-            "row_end": meta.get("row_end"),
-            "distance": None,
-            "text_preview": None,
+        t0 = time.time()
+        results = query(q_embedding)
+        answer = generate_answer(req.question, results)
+        latency = time.time() - t0
+
+        sources = []
+        for meta in results["metadatas"][0]:
+            source = {
+                "chunk_index": meta.get("chunk_index"),
+                "page_start": meta.get("page_start"),
+                "page_end": meta.get("page_end"),
+                "row_start": meta.get("row_start"),
+                "row_end": meta.get("row_end"),
+                "distance": None,
+                "text_preview": None,
+            }
+            sources.append(source)
+
+        for i, dist in enumerate(results["distances"][0]):
+            if i < len(sources):
+                sources[i]["distance"] = round(dist, 4)
+
+        for i, doc in enumerate(results["documents"][0]):
+            if i < len(sources):
+                sources[i]["text_preview"] = doc[:150]
+
+        return {
+            "answer": answer,
+            "latency": round(latency, 1),
+            "sources": sources,
         }
-        sources.append(source)
-
-    for i, dist in enumerate(results["distances"][0]):
-        if i < len(sources):
-            sources[i]["distance"] = round(dist, 4)
-
-    for i, doc in enumerate(results["documents"][0]):
-        if i < len(sources):
-            sources[i]["text_preview"] = doc[:150]
-
-    return {
-        "answer": answer,
-        "latency": round(latency, 1),
-        "sources": sources,
-    }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Query failed: %s\n%s", str(e), traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Query error: {str(e)}")
